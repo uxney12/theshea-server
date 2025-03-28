@@ -1,0 +1,160 @@
+{% extends "base_generic.html" %}
+{% block content %}
+<main class="col-md-9 col-lg-10 px-0">
+  <div class="d-flex flex-column align-items-start pt-4 pb-3 mb-3" style="background-color: #f5f7fa; border-bottom: solid 1px #e3e6ed;">
+    <p class="px-md-5 mb-3" style="font-family: sans-serif; font-size: 1.553125rem; font-weight: 700;">DANH MỤC SKU</p>
+
+
+    <div class="container-fluid px-md-5">
+      <div class="row align-items-center">
+          <div class="col-auto">
+            <div class="d-flex align-items-center border rounded px-3" style="width: 250px; background: #FFFFFF; border-radius: 5px; border-color: #cbd0dd;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16" class="text-muted">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                </svg>
+                <input type="text" id="search-input" class="form-control border-0 shadow-none bg-transparent ms-2" 
+                placeholder="Tìm kiếm..." style="width: 250px; font-size: .8rem; font-family: 'Nunito'; border-radius: 5px; padding: 6px 12px; " 
+                value="{{ search_query }}" />
+            </div>
+          </div>
+
+          <div class="col"></div>
+  
+          <div class="col-auto d-flex">
+              <a href="#" class="btn custom2-btn me-2" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0;">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+                  </svg>
+              </a>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+  {% if sku_page %}
+  <div class="table-responsive scrollbar px-md-5">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>
+            <a href="?sort_field=sku_code&sort_order={% if current_sort_field == 'sku_code' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="{% if current_sort_field == 'sku_code' %}{{ current_sort_order }}{% endif %}">
+              MÃ SKU
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=sku_name&sort_order={% if current_sort_field == 'sku_name' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="{% if current_sort_field == 'sku_name' %}{{ current_sort_order }}{% endif %}">
+              TÊN SKU
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=design__collection__collection_name&sort_order={% if current_sort_field == 'design__collection__collection_name' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+            class="{% if current_sort_field == 'design__collection__collection_name' %}{{ current_sort_order }}{% endif %}">
+              BỘ SƯU TẬP
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=design__collection__style&sort_order={% if current_sort_field == 'design__collection__style' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+            class="{% if current_sort_field == 'design__collection__style' %}{{ current_sort_order }}{% endif %}">
+              PHONG CÁCH
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=color__color_name&sort_order={% if current_sort_field == 'color__color_name' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+            class="{% if current_sort_field == 'color__color_name' %}{{ current_sort_order }}{% endif %}">
+              MÀU SẮC
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=size__size_name&sort_order={% if current_sort_field == 'size__size_name' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+            class="{% if current_sort_field == 'size__size_name' %}{{ current_sort_order }}{% endif %}">
+              SIZE
+            </a>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sku in sku_page %}
+        <tr>
+            <td>{{ sku.sku_code|default:'' }}</td>
+            <td>{{ sku.sku_name|default:'' }}</td>
+            <td>{{ sku.design.collection.collection_name|default:'' }}</td>
+            <td>{{ sku.design.collection.style|default:'' }}</td>
+            <td>{{ sku.color.color_name|default:'' }}</td>
+            <td>{{ sku.size.size_name|default:'' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p>Không có bất kỳ nguyên vật liệu nào.</p>
+  {% endif %}
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        {% if sku_page.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ sku_page.previous_page_number }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}&search={{ search_query }}" aria-label="Previous">
+                    <span aria-hidden="true">&lsaquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&lsaquo;</span>
+                </a>
+            </li>
+        {% endif %}
+
+        {% for num in sku_page.paginator.page_range %}
+            {% if sku_page.number == num %}
+                <li class="page-item active">
+                    <a class="page-link" href="?page={{ num }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}&search={{ search_query }}">{{ num }}</a>
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}&search={{ search_query }}">{{ num }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if sku_page.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ sku_page.next_page_number }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}&search={{ search_query }}" aria-label="Next">
+                    <span aria-hidden="true">&rsaquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&rsaquo;</span>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+      document.getElementById('search-input').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') { 
+            const searchValue = this.value;
+            const url = new URL(window.location.href);
+            url.searchParams.set('search', searchValue);
+            url.searchParams.set('page', 1); 
+            window.location.href = url.toString();
+        }
+    });
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+</script>
+{% endblock %}
+

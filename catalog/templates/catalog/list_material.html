@@ -1,0 +1,1267 @@
+{% extends "base_generic.html" %}
+{% block content %}
+<main class="col-md-9 col-lg-10 px-0">
+  <div class="d-flex flex-column align-items-start pt-4 pb-3 mb-3" style="background-color: #f5f7fa; border-bottom: solid 1px #e3e6ed;">
+    <p class="px-md-5 mb-3" style="font-family: sans-serif; font-size: 1.453125rem; font-weight: 600;">NGUYÊN VẬT LIỆU</p>
+
+
+    <div class="container-fluid px-md-5">
+      <div class="row align-items-center">
+          <div class="col-auto">
+            <div class="d-flex align-items-center border rounded px-3" style="width: 250px; background: #FFFFFF; border-radius: 5px; border-color: #cbd0dd;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16" class="text-muted">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                </svg>
+                <input type="text" id="search-input" class="form-control border-0 shadow-none bg-transparent ms-2" 
+                placeholder="Tìm kiếm..." style="width: 250px; font-size: .8rem; font-family: 'Nunito'; border-radius: 5px; padding: 6px 12px; " 
+                value="{{ search_query }}" />
+            </div>
+          </div>
+
+          <div class="col"></div>
+  
+          <div class="col-auto d-flex">
+              <a href="#" class="btn custom2-btn me-2" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0;">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+                  </svg>
+              </a>
+              <a href="#" data-bs-toggle="modal" data-bs-target="#uploadFileModal" class="btn custom2-btn me-2" style="display: flex; align-items: center; gap: 8px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="14" height="14" style="vertical-align: middle;">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                  </svg>        
+                  Nhập file
+              </a>
+              <a href="#" data-bs-toggle="modal" data-bs-target="#createMaterialModal" class="btn custom-btn" style="display: flex; align-items: center; gap: 8px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="16" height="16" style="vertical-align: middle;">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                  Thêm mới
+              </a>
+          </div>
+      </div>
+  </div>
+  
+    
+</div>
+
+  <!-- Modal filter -->
+  <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form id="uploadFileForm" method="post" action="" enctype="multipart/form-data">
+          <div class="modal-header">
+            <h5 class="modal-title" id="filterModalLabel" style="color:#CBA230">Tùy chọn bộ lọc</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group mb-2">
+              <label for="file" class="mb-2">Nhà cung cấp</label>
+              <select name="supplier" class="form-control">
+                  <option value="">Chọn tùy chọn</option>
+                  {% for supplier in suppliers %}
+                      <option value="{{ supplier.supplier_code }}" {% if request.GET.supplier == supplier.supplier_code %}selected{% endif %}>{{ supplier.supplier_name }}</option>
+                  {% endfor %}
+              </select>
+            </div>
+            <div class="form-group mb-2">
+              <label for="file" class="mb-2">Màu sắc</label>
+              <select name="color" class="form-control">
+                  <option value="">Chọn tùy chọn</option>
+                  {% for color in colors %}
+                      <option value="{{ color.color }}" {% if request.GET.color == color.color %}selected{% endif %}>{{ color.color }}</option>
+                  {% endfor %}
+              </select>
+            </div>
+            <div class="form-group mb-2">
+              <label for="file" class="mb-2">Loại</label>
+              <select name="type" class="form-control">
+                  <option value="">Chọn tùy chọn</option>
+                  {% for type in types %}
+                      <option value="{{ type.types }}" {% if request.GET.type == type.types %}selected{% endif %}>{{ type.types }}</option>
+                  {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Đặt lại</button>
+            <button type="submit" class="btn submit-btn" id="submitUploadFileBtn">Áp dụng</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Nhập File -->
+  <div class="modal fade" id="uploadFileModal" tabindex="-1" role="dialog" aria-labelledby="uploadFileModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form id="uploadFileForm" method="post" action="" enctype="multipart/form-data">
+          <div class="modal-header">
+            <h5 class="modal-title" id="uploadFileModalLabel" style="color:#CBA230">Nhập danh sách nguyên vật liệu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group mb-2">
+              <label for="file" class="mb-2">Chọn file Excel:</label>
+              <input type="file" id="file" name="file" class="form-control" accept=".xls,.xlsx">
+            </div>
+            <div class="form-group mb-2">
+              <label for="sheetUrl" class="mb-2">URL của Google Sheets:</label>
+              <input type="text" id="sheetUrl" name="sheetUrl" class="form-control">
+            </div>
+            <div class="form-group mb-2">
+              <small class="form-text text-muted">Lưu ý: Hãy đảm bảo rằng liên kết Google Sheets đã được mở ở chế độ công khai.</small>
+            </div>
+            <div class="form-group mb-2">
+              <p>
+                Tải file mẫu danh sách nguyên vật liệu <a href="https://docs.google.com/spreadsheets/d/1e2XUteaWwpe-UpMq1NYoTje-MHCF8gMs33OdA0VXl_Q/edit?gid=839154764#gid=839154764" target="_blank">tại đây</a>.
+              </p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Hủy</button>
+            <button type="submit" class="btn submit-btn" id="submitUploadFileBtn">Nhập & Đóng</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Tạo mới nguyên vật liệu -->
+  <div class="modal fade" id="createMaterialModal" tabindex="-1" role="dialog" aria-labelledby="createMaterialModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 800px; width: 100%; height: 535px;">
+        <div class="modal-content" style="height: 100%; overflow-y: auto;">
+            <form id="createForm" method="post" action="" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="MaterialModalLabel" style="color:#CBA230">Tạo mới nguyên vật liệu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="height: calc(100% - 125spx); overflow-y: auto;">
+                  <div class="row">
+                    <div class="row d-flex align-items-start">
+                        <div class="col-md-5 d-flex flex-column align-items-center">
+                            <label id="uploadLabel" for="image" class="form-control custom-input d-flex align-items-center justify-content-center" style="cursor: pointer; height: 355px; width: 100%;">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" style="width: 20px; height: 20px; margin-right: 8px; color: #6e7891;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                                </svg>
+                                <span style="font-size: 12px; color: #6e7891;">Tải tệp lên...</span>
+                            </label>
+                            <input type="file" id="image" name="image" class="d-none" accept="image/*">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="row mb-3">
+                                <div class="col-md-4 d-flex align-items-center">
+                                    <label for="material_code">Mã nguyên vật liệu:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" id="material_code" name="material_code" class="form-control custom-input" value="{{ new_material_code }}" readonly>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4 d-flex align-items-center">
+                                    <label for="material_name">Tên nguyên vật liệu:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" id="material_name" name="material_name" class="form-control custom-input" disabled>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4 d-flex align-items-center">
+                                    <label for="supplier">Nhà cung cấp:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <select id="supplier" name="supplier" class="form-control">
+                                        <option value="">-- Chọn nhà cung cấp --</option>
+                                        {% for sup in supplier %}
+                                            <option value="{{ sup.supplier_code }} - {{ sup.supplier_name }}">{{ sup.supplier_code }} - {{ sup.supplier_name }}</option>
+                                        {% endfor %}
+                                        <option value="add-new-supplier" data-bs-toggle="modal" data-bs-target="#createSupplierModal">+ Thêm nhà cung cấp</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4 d-flex align-items-center">
+                                    <label for="types">Loại:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" id="types" name="types" class="form-control custom-input">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4 d-flex align-items-center">
+                                    <label for="color">Màu sắc:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" id="color" name="color" class="form-control custom-input">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4 d-flex align-items-center">
+                                    <label for="stock_limit">Định mức tồn:</label>
+                                </div>
+                                <div class="col-md-8 d-flex">
+                                    <input type="number" id="stock_min" name="stock_min" class="form-control me-2" placeholder="Ít nhất" min="0">
+                                    <input type="number" id="stock_max" name="stock_max" class="form-control" placeholder="Nhiều nhất" min="0">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4 d-flex align-items-center">
+                                    <label for="notes">Ghi chú:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <textarea id="notes" name="notes" class="form-control" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn cancel-btn" data-bs-target="#createMaterialModal" data-bs-toggle="modal" data-bs-dismiss="modal" style="width: 150px;">Hủy</button>
+                    <button class="btn submit-btn" id="submitCreateMaterialBtn" style="width: 150px;">Tạo mới & Đóng</button>
+                </div>
+              </form>
+          </div>
+      </div>
+  </div>
+
+  <!-- Modal Tạo mới nhà cung cấp -->
+  <div class="modal fade" id="createSupplierModal" tabindex="-1" role="dialog" aria-labelledby="createSupplierModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 800px; width: 100%; height: 380px;">
+        <div class="modal-content" style="height: 100%; overflow-y: auto;">
+            <form id="createForm" method="post" action="" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createSupplierModalLabel" style="color:#CBA230">Tạo mới nhà cung cấp</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="height: calc(100% - 125spx); overflow-y: auto;">
+                  <div class="row mb-2">
+                        <div class="col-md-2 d-flex align-items-center">
+                            <label for="supplier_code">Mã nhà cung cấp:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <input type="text" id="supplier_code" name="supplier_code" class="form-control custom-input" value="{{ new_supplier_code }}" readonly>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center">
+                            <label for="phone_number">Số điện thoại:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <input type="text" id="phone_number" name="phone_number" class="form-control custom-input">
+                        </div>
+                  </div>
+                  <div class="row mb-2">
+                        <div class="col-md-2 d-flex align-items-center">
+                          <label for="supplier_name">Tên nhà cung cấp:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                          <input type="text" id="supplier_name" name="supplier_name" class="form-control custom-input" required>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center">
+                            <label for="zalo">Zalo:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <input type="text" id="zalo" name="zalo" class="form-control custom-input">
+                        </div>
+                    </div>
+                  <div class="row mb-2">
+                        <div class="col-md-2 d-flex align-items-center" style="white-space: nowrap;">
+                          <label for="category">Loại nguyên vật liệu:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <select id="category" name="category" class="form-control">
+                                <option value="">-- Chọn loại nguyên liệu --</option>
+                                {% for cat in category %}
+                                    <option value="{{ cat.category_code }} - {{ cat.category_name }}">{{ cat.category_code }} - {{ cat.category_name }}</option>
+                                {% endfor %}
+                                <option value="add-new-category" data-bs-toggle="modal" data-bs-target="#createCategoryModal">+ Thêm loại nguyên vật liệu</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center">
+                            <label for="facebook">Facebook:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <input type="text" id="facebook" name="facebook" class="form-control custom-input">
+                        </div>
+                  </div>
+                  <div class="row mb-2">
+                        <div class="col-md-2 d-flex align-items-center">
+                          <label for="address">Địa chỉ:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <input type="text" id="address" name="address" class="form-control custom-input">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center">
+                            <label for="website">Website:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <input type="text" id="website" name="website" class="form-control custom-input">
+                        </div>
+                  </div>              
+                  <div class="row mb-2">
+                        <div class="col-md-2 d-flex align-items-center">
+                            <label for="notes">Ghi chú:</label>
+                        </div>
+                        <div class="col-md-10 d-flex align-items-center">
+                            <textarea id="notes" name="notes" class="form-control" rows="2"></textarea>
+                        </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn cancel-btn" id="submitCancelSupplierBtn" data-bs-dismiss="modal" style="width: 150px;">Hủy</button>
+                    <button type="submit" class="btn submit-btn" id="submitAddSupplierBtn" style="width: 150px;">Tạo mới & Đóng</button>
+                </div>
+              </form>
+          </div>
+      </div>
+  </div>
+  
+  <!-- Bảng nguyên vật liệu -->
+  {% if all_material %}
+  <div class="table-responsive scrollbar px-md-5">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>
+            <a href="?sort_field=material_code&sort_order={% if current_sort_field == 'material_code' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="{% if current_sort_field == 'material_code' %}{{ current_sort_order }}{% endif %}">
+              MÃ NGUYÊN VẬT LIỆU
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=material_name&sort_order={% if current_sort_field == 'material_name' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="{% if current_sort_field == 'material_name' %}{{ current_sort_order }}{% endif %}">
+              TÊN NGUYÊN VẬT LIỆU
+            </a>
+          </th>
+          <th>        
+              HÌNH ẢNH
+          </th>
+          <th>
+            <a href="?sort_field=supplier__supplier_name&sort_order={% if current_sort_field == 'supplier__supplier_name' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+            class="{% if current_sort_field == 'supplier__supplier_name' %}{{ current_sort_order }}{% endif %}">
+              NHÀ CUNG CẤP
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=types&sort_order={% if current_sort_field == 'types' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+            class="{% if current_sort_field == 'types' %}{{ current_sort_order }}{% endif %}">
+              LOẠI 
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=color&sort_order={% if current_sort_field == 'color' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+            class="{% if current_sort_field == 'color' %}{{ current_sort_order }}{% endif %}">
+              MÀU SẮC
+            </a>
+          </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for material in materials_page %}
+        <tr>
+          <td>
+            <a href="#" class="id-table" data-bs-toggle="modal" data-bs-target="#modalDetail{{ material.material_code }}">
+                {{ material.material_code }}
+            </a>
+          </td>
+          <td>{{ material.material_name|default:'' }}</td>
+          <td>
+            {% if material.image %}
+              <img src="{{ material.image.url }}" alt="Hình ảnh nguyên vật liệu" width="70" height="70">
+            {% else %}
+              <img src="/media/material_images/material.jpg" alt="Không có hình ảnh" width="70" height="70">
+            {% endif %}
+          </td>
+          <td>
+            <a href="#" class="id-table" data-bs-toggle="modal" data-bs-target="#modalDetail{{ material.supplier.supplier_code }}">
+              {{ material.supplier.supplier_name|default:'' }}
+            </a>
+          </td>
+          <td>{{ material.types|default:'' }}</td>
+          <td>{{ material.color|default:'' }}</td>
+          <td>
+            <a href="#" class="icon-table" data-bs-toggle="modal" data-bs-target="#modalUpdate{{ material.material_code }}">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+              </svg>              
+            </a>
+            <a href="#" class="icon-table" data-bs-toggle="modal" data-bs-target="#modalDelete{{ material.material_code }}">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+              </svg>              
+            </a>
+          </td>
+        </tr>
+
+         <!-- Modal detail nguyên vật liệu -->
+          <div class="modal fade" id="modalDetail{{ material.material_code }}" tabindex="-1" aria-labelledby="modalDetailLabel{{ material.material_code }}" aria-hidden="true">
+            <div class="modal-dialog" role="document" style="max-width: 800px; width: 100%; height: 440px;">
+              <div class="modal-content" style="height: 100%; overflow-y: auto;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalDetailLabel{{ material.material_code }}" class="personal-info">{{ material.material_code }} | {{ material.material_name }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="container">
+                        <div class="row">
+                          <div class="col-md-4">
+                            {% if material.image %}
+                              <img src="{{ material.image.url }}" alt="Hình ảnh nguyên vật liệu" class="img-fluid" style="max-width: 220px; max-height: 180px;">
+                            {% else %}
+                              <img src="/media/material_images/material.jpg" alt="Không có hình ảnh" class="img-fluid" style="max-width: 220px; max-height: 180px;">
+                            {% endif %}
+                          </div>
+                          <div class="col-md-8">
+                            <div class="row mb-2">
+                              <div class="col-md-4" style="white-space: nowrap;">
+                                <strong>Mã nguyên vật liệu:</strong>
+                              </div>
+                              <div class="col-md-8">
+                                <span>{{ material.material_code|default:'-' }}</span>
+                              </div>
+                            </div>
+                            <div class="row mb-2">
+                              <div class="col-md-4" style="white-space: nowrap;">
+                                <strong>Tên nguyên vật liệu:</strong>
+                              </div>
+                              <div class="col-md-8">
+                                <span>{{ material.material_name|default:'-' }}</span>
+                              </div>
+                            </div>
+                            <div class="row mb-2">
+                              <div class="col-md-4">
+                                <strong>Nhà cung cấp:</strong>
+                              </div>
+                              <div class="col-md-8">
+                                <span>{{ material.supplier|default:'-' }}</span>
+                              </div>
+                            </div>
+                            <div class="row mb-2">
+                              <div class="col-md-4">
+                                <strong>Loại:</strong>
+                              </div>
+                              <div class="col-md-8">
+                                <span>{{ material.types|default:'-' }}</span>
+                              </div>
+                            </div>
+                            <div class="row mb-2">
+                              <div class="col-md-4">
+                                <strong>Màu sắc:</strong>
+                              </div>
+                              <div class="col-md-8">
+                                <span>{{ material.color|default:'-' }}</span>
+                              </div>
+                            </div>
+                            <div class="row mb-2">
+                              <div class="col-md-4">
+                                <strong>Định mức tồn:</strong>
+                              </div>
+                              <div class="col-md-8">
+                                <span>{{ material.stock_min|default:'-' }}&nbsp;&nbsp;&nbsp; > &nbsp;&nbsp;&nbsp;{{ material.stock_max|default:'-' }}</span>
+                              </div>
+                            </div>
+                            <div class="row mb-2">
+                              <div class="col-md-4">
+                                <strong>Ghi chú:</strong>
+                              </div>
+                              <div class="col-md-8">
+                                <span>{{ material.notes|default:'-' }}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <hr color="#dee2e6">
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+          <!-- Modal detail nhà cung cấp -->
+          <div class="modal fade" id="modalDetail{{ material.supplier.supplier_code }}" tabindex="-1" aria-labelledby="modalDetailLabel{{ material.supplier.supplier_code }}" aria-hidden="true">
+            <div class="modal-dialog" role="document" style="max-width: 800px; width: 100%; height: 440px;">
+              <div class="modal-content" style="height: 100%; overflow-y: auto;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalDetailLabel{{ material.supplier.supplier_code }}" class="personal-info" style="color:#CBA230">{{ material.supplier.supplier_name }} | {{ material.supplier.supplier_code }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="container">
+                        <div class="row mb-2">
+                          <div class="col-md-2" style="white-space: nowrap;">
+                            <strong>Mã nhà cung cấp:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ material.supplier.supplier_code|default:'-' }}</span>
+                          </div>
+                          <div class="col-md-2">
+                            <strong>Số điện thoại:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ material.supplier.phone_number|default:'-' }}</span>
+                          </div>
+                        </div>
+                        <div class="row mb-2">
+                          <div class="col-md-2" style="white-space: nowrap;">
+                            <strong>Tên nhà cung cấp:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ material.supplier.supplier_name|default:'-' }}</span>
+                          </div>
+                          <div class="col-md-2">
+                            <strong>Facebook:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ material.supplier.facebook|default:'-' }}</span>
+                          </div>
+                        </div>
+                        <div class="row mb-2">
+                          <div class="col-md-2">
+                            <strong>Phân loại:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ material.supplier.category|default:'-' }}</span>
+                          </div>
+                          <div class="col-md-2">
+                            <strong>Website:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ material.supplier.website|default:'-' }}</span>
+                          </div>
+                        </div>
+                        <div class="row mb-2">
+                          <div class="col-md-2">
+                            <strong>Địa chỉ:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ material.supplier.address|default:'-' }}</span>
+                          </div>
+                          <div class="col-md-2">
+                            <strong>Ghi chú:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ material.supplier.notes|default:'-' }}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <hr color="#dee2e6">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+          <!-- Modal update -->
+          <div class="modal fade" id="modalUpdate{{ material.material_code }}" tabindex="-1" aria-labelledby="modalUpdateLabel{{ material.material_code }}" aria-hidden="true">
+            <div class="modal-dialog" role="document" style="max-width: 800px; width: 100%; height: 535px;">
+              <div class="modal-content" style="height: 100%; overflow-y: auto;">
+                  <form id="uploadFileForm" method="post" action="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="updateMaterialModalLabel" style="color:#CBA230">Điều chỉnh nguyên vật liệu</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="height: calc(100% - 125spx); overflow-y: auto;">
+                    <div class="row">
+                      <div class="row d-flex align-items-start">
+                          <div class="col-md-5 d-flex flex-column align-items-center">
+                            <label id="uploadLabel" for="image" class="form-control custom-input d-flex align-items-center justify-content-center" style="cursor: pointer; height: 355px; width: 100%;">
+                              {% if material.image %}
+                                <div class="position-relative" style="display: inline-block;">
+                                  <img id="material-image" src="{{ material.image.url }}" alt="Hình ảnh nguyên vật liệu" class="img-fluid" style="max-height: 325px; max-width: 275px;">
+                                  <button type="button" id="delete-image-btn" style="
+                                    position: absolute;
+                                    top: -5px;
+                                    right: -5px;
+                                    width: 13px;
+                                    height: 13px;
+                                    padding: 0;
+                                    border: 1px solid #6e7891;
+                                    border-radius: 50%;
+                                    background-color: #fff;
+                                    color: #6e7891;
+                                    font-size: 10px;
+                                    line-height: 1;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                  ">
+                                    &times;
+                                  </button>
+                                </div>
+                              {% else %}
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" style="width: 20px; height: 20px; margin-right: 8px; color: #6e7891;">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                                </svg>
+                                <span style="font-size: 12px; color: #6e7891;">Tải tệp lên...</span>
+                              {% endif %}
+                            </label>
+                            <input type="file" id="image" name="image" class="d-none" accept="image/*">
+                          </div>
+                          <div class="col-md-7">
+                              <div class="row mb-3">
+                                  <div class="col-md-4 d-flex align-items-center">
+                                      <label for="material_code">Mã nguyên vật liệu:</label>
+                                  </div>
+                                  <div class="col-md-8">
+                                      <input type="text" id="material_code" name="material_code" class="form-control custom-input" value="{{ material.material_code }}" readonly>
+                                  </div>
+                              </div>
+                              <div class="row mb-3">
+                                  <div class="col-md-4 d-flex align-items-center">
+                                      <label for="material_name">Tên nguyên vật liệu:</label>
+                                  </div>
+                                  <div class="col-md-8">
+                                      <input type="text" id="material_name" name="material_name" class="form-control custom-input" value="{{ material.material_name }}">
+                                  </div>
+                              </div>
+                              <div class="row mb-3">
+                                  <div class="col-md-4 d-flex align-items-center">
+                                      <label for="supplier">Nhà cung cấp:</label>
+                                  </div>
+                                  <div class="col-md-8">
+                                    <select id="supplier" name="supplier" class="form-control custom-input">
+                                            <option value="{{ material.supplier.supplier_code }} - {{ material.supplier.supplier_name }}">{{ material.supplier.supplier_name }}</option>
+                                            <option value="">-- Chọn nhà cung cấp --</option>
+                                        {% for sup in suppliers %}
+                                            <option value="{{ sup.supplier_code }} - {{ sup.supplier_name }}">
+                                                {{ sup.supplier_code }} - {{ sup.supplier_name }}
+                                            </option>
+                                        {% endfor %}
+                                      
+                                    </select>
+                                  </div>
+                              </div>
+                              <div class="row mb-3">
+                                  <div class="col-md-4 d-flex align-items-center">
+                                      <label for="types">Loại:</label>
+                                  </div>
+                                  <div class="col-md-8">
+                                      <input type="text" id="types" name="types" class="form-control custom-input" value="{{ material.types }}">
+                                  </div>
+                              </div>
+                              <div class="row mb-3">
+                                  <div class="col-md-4 d-flex align-items-center">
+                                      <label for="color">Màu sắc:</label>
+                                  </div>
+                                  <div class="col-md-8">
+                                      <input type="text" id="color" name="color" class="form-control custom-input" value="{{ material.color }}">
+                                  </div>
+                              </div>
+                              <div class="row mb-3">
+                                  <div class="col-md-4 d-flex align-items-center">
+                                      <label for="stock_limit">Định mức tồn:</label>
+                                  </div>
+                                  <div class="col-md-8 d-flex">
+                                      <input type="number" id="stock_min" name="stock_min" class="form-control me-2" placeholder="Ít nhất" min="0" value="{{ material.stock_min }}">
+                                      <input type="number" id="stock_max" name="stock_max" class="form-control" placeholder="Nhiều nhất" min="0" value="{{ material.stock_max }}">
+                                  </div>
+                              </div>
+                              <div class="row mb-3">
+                                  <div class="col-md-4 d-flex align-items-center">
+                                      <label for="notes">Ghi chú:</label>
+                                  </div>
+                                  <div class="col-md-8">
+                                      <textarea id="notes" name="notes" class="form-control" rows="3">{{ material.notes|default:'' }}</textarea>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn cancel-btn" data-bs-dismiss="modal" style="width: 150px;">Hủy</button>
+                      <button type="submit" class="btn submit-btn" id="submitUpdateMaterialBtn" data-material-code="{{ material.material_code }}" style="width: 150px;">Chỉnh sửa & Đóng</button>
+                    </div>
+                  </form>
+                </div>
+            </div>
+          </div>
+
+          <!-- Modal delete -->
+          <div class="modal fade" id="modalDelete{{ material.material_code }}" tabindex="-1" aria-labelledby="modalDeleteLabel{{ material.material_code }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                  <form id="uploadFileForm" method="post" action="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="deleteMaterialModalLabel" style="color:#CBA230">Xóa nguyên vật liệu</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Bạn chắc chắn muốn xóa nguyên vật liệu <strong>{{ material.material_name }}</strong>?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn submit-btn" id="submitDeleteMaterialBtn" data-material-code="{{ material.material_code }}">Xóa & Đóng</button>
+                    </div>
+                  </form>
+                </div>
+            </div>
+          </div>
+
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p>Không có bất kỳ nguyên vật liệu nào.</p>
+  {% endif %}
+
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        {% if materials_page.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ materials_page.previous_page_number }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}" aria-label="Previous">
+              <span aria-hidden="true">&lsaquo;</span>
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Previous">
+              <span aria-hidden="true">&lsaquo;</span>
+            </a>
+          </li>
+        {% endif %}
+    
+        {% for num in materials_page.paginator.page_range %}
+          {% if materials_page.number == num %}
+            <li class="page-item active">
+              <a class="page-link" href="?page={{ num }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}">{{ num }}</a>
+            </li>
+          {% else %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ num }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}">{{ num }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+    
+        {% if materials_page.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ materials_page.next_page_number }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}" aria-label="Next">
+              <span aria-hidden="true">&rsaquo;</span>
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Next">
+              <span aria-hidden="true">&rsaquo;</span>
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+  $(document).ready(function() {
+
+    document.getElementById('search-input').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') { 
+            const searchValue = this.value;
+            const url = new URL(window.location.href);
+            url.searchParams.set('search', searchValue);
+            url.searchParams.set('page', 1); 
+            window.location.href = url.toString();
+        }
+    });
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+    
+    document.getElementById('image').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const imageUrl = URL.createObjectURL(file);
+          const uploadLabel = document.getElementById('uploadLabel');
+          uploadLabel.innerHTML = `<img src="${imageUrl}" alt="Hình ảnh đã tải" style="max-height: 315px;max-width: 275px;">`;
+        }
+    });
+  
+    $(document).ready(function () {
+    $('#image').on('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+
+            $('#uploadLabel').html(`
+                <div class="position-relative" style="display: inline-block;">
+                    <img id="material-image" src="${imageUrl}" alt="Hình ảnh đã tải" style="max-height: 315px; max-width: 275px;">
+                    <button type="button" id="delete-image-btn" style="
+                        position: absolute;
+                        top: -5px;
+                        right: -5px;
+                        width: 13px;
+                        height: 13px;
+                        padding: 0;
+                        border: 1px solid #6e7891;
+                        border-radius: 50%;
+                        background-color: #fff;
+                        color: #6e7891;
+                        font-size: 10px;
+                        line-height: 1;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;">
+                        &times;
+                    </button>
+                </div>
+            `);
+        }
+    });
+
+    $(document).on('click', '#delete-image-btn', function () {
+            console.log("Nút xóa đã được click.");
+
+            $('#material-image').remove();
+            $('#delete-image-btn').remove(); 
+            $('.position-relative').remove();
+            $('#image').val(''); 
+            $('#uploadLabel').html(`
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" style="width: 20px; height: 20px; margin-right: 8px; color: #6e7891;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                </svg> 
+                <span style="font-size: 12px; color: #6e7891;">Tải tệp lên...</span>
+            `);
+        });
+    });
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+    
+    document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('[id^="image"]').forEach(input => {
+        input.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const imageUrl = URL.createObjectURL(file);
+                const uploadLabel = event.target.closest('.col-md-5').querySelector('#uploadLabel');
+                uploadLabel.innerHTML = `<img src="${imageUrl}" alt="Hình ảnh đã tải" style="max-height: 315px;max-width: 275px;">`;
+            }
+        });
+    });
+
+    document.querySelectorAll('#delete-image-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const imageContainer = this.closest('.position-relative');
+            const uploadLabel = imageContainer.closest('.col-md-5').querySelector('#uploadLabel');
+            const inputFile = imageContainer.closest('.col-md-5').querySelector('#image');
+
+            imageContainer.remove();
+            uploadLabel.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" style="width: 20px; height: 20px; margin-right: 8px; color: #6e7891;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                </svg>
+                <span style="font-size: 12px; color: #6e7891;">Tải tệp lên...</span>
+            `;
+
+            inputFile.value = ''; // Xóa giá trị file input
+        });
+    });
+});
+
+
+
+    
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+    
+
+    function updateMaterialName() {
+        const materialCodeInput = document.getElementById('material_code');
+        const typesInput = document.getElementById('types');
+        const colorInput = document.getElementById('color');
+        const supplierSelect = document.getElementById('supplier');
+        const materialNameInput = document.getElementById('material_name');
+
+        const code = materialCodeInput.value;
+        const type = typesInput.value;
+        const color = colorInput.value;
+        const supplier = supplierSelect.value;
+
+        let supplierName = '';
+        if (supplier) {
+            const parts = supplier.split(' - ');
+            supplierName = parts[1] ? parts[1] : '';
+        }
+
+        const materialName = `[${code}] ${type} - ${color} (${supplierName})`.trim();
+        materialNameInput.value = materialName;
+        console.log("Tên nguyên vật liệu tự động:", materialName);
+    }
+
+    window.addEventListener('load', function () {
+        const typesInput = document.getElementById('types');
+        const colorInput = document.getElementById('color');
+        const supplierSelect = document.getElementById('supplier');
+
+        if (typesInput) {
+            typesInput.addEventListener('input', updateMaterialName);
+        }
+        if (colorInput) {
+            colorInput.addEventListener('input', updateMaterialName);
+        }
+        if (supplierSelect) {
+            supplierSelect.addEventListener('change', updateMaterialName);
+        }
+    });
+
+    
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+
+    function updateMaterialNameUpdate(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+
+    const materialCodeInput = modal.querySelector('#material_code');
+    const typesInput = modal.querySelector('#types');
+    const colorInput = modal.querySelector('#color');
+    const supplierSelect = modal.querySelector('#supplier');
+    const materialNameInput = modal.querySelector('#material_name');
+
+    if (!materialCodeInput || !typesInput || !colorInput || !supplierSelect || !materialNameInput) return;
+
+    const code = materialCodeInput.value;
+    const type = typesInput.value;
+    const color = colorInput.value;
+    const supplier = supplierSelect.value;
+
+    let supplierName = '';
+    if (supplier) {
+        const parts = supplier.split(' - ');
+        supplierName = parts[1] ? parts[1] : '';
+    }
+
+    const materialName = `[${code}] ${type} - ${color} (${supplierName})`.trim();
+    materialNameInput.value = materialName;
+    console.log("Tên nguyên vật liệu tự động (cập nhật):", materialName);
+}
+
+window.addEventListener('load', function () {
+    document.querySelectorAll('.modal').forEach(modal => {
+        const typesInput = modal.querySelector('#types');
+        const colorInput = modal.querySelector('#color');
+        const supplierSelect = modal.querySelector('#supplier');
+
+        if (typesInput) {
+            typesInput.addEventListener('input', function () {
+                updateMaterialNameUpdate(modal.id);
+            });
+        }
+        if (colorInput) {
+            colorInput.addEventListener('input', function () {
+                updateMaterialNameUpdate(modal.id);
+            });
+        }
+        if (supplierSelect) {
+            supplierSelect.addEventListener('change', function () {
+                updateMaterialNameUpdate(modal.id);
+            });
+        }
+    });
+});
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+    $('#submitUploadFileBtn').click(function(e) {
+      e.preventDefault();
+
+      var url = '{% url "catalog:upload_material" %}';
+      var csrftoken = '{{ csrf_token }}';
+      var fileInput = document.getElementById('file').files[0];
+      var sheetUrl = document.getElementById('sheetUrl').value;
+      var formData = new FormData();
+
+      if (fileInput) {
+        formData.append('file', fileInput);
+      } else if (sheetUrl) {
+        formData.append('sheetUrl', sheetUrl);
+      } else {
+        alert("Vui lòng chọn file hoặc nhập URL của Google Sheets.");
+        return;
+      }
+
+      fetch(url, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': csrftoken,
+        },
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        alert("Tệp đã được tải lên và xử lý thành công");
+        $('#uploadFileModal').modal('hide');
+        window.location.reload(); 
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert("Đã xảy ra lỗi khi xử lý tệp.");
+      });
+    });
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+    $('#submitCreateMaterialBtn').click(function(e) {
+        e.preventDefault();
+
+        var url = '{% url "catalog:create_material" %}';
+        var csrftoken = '{{ csrf_token }}';
+
+        var formData = new FormData();
+        formData.append('material_code', $('#material_code').val());
+        formData.append('material_name', $('#material_name').val());
+        formData.append('supplier', $('#supplier').val());
+        var fileInput = $('#image')[0];
+        if (fileInput.files.length > 0) {
+            formData.append('image', fileInput.files[0]);
+        }
+
+        formData.append('types', $('#types').val());
+        formData.append('color', $('#color').val());
+        formData.append('notes', $('#notes').val());
+        formData.append('stock_min', $('#stock_min').val());
+        formData.append('stock_max', $('#stock_max').val());
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert("Nguyên vật liệu đã được tạo thành công!");
+            location.reload(); 
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Đã xảy ra lỗi khi thêm nguyên vật liệu.");
+        });
+    });
+
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+    $('#supplier').change(function() {
+        if ($(this).val() === 'add-new-supplier') {
+            $('#createSupplierModal').modal('show');
+            $('#createMaterialModal').modal('hide');
+        }
+    });
+
+    $('#submitCancelSupplierBtn').click(function(e) {
+        $('#createMaterialModal').modal('show');
+    });
+
+    $('#submitAddSupplierBtn').click(function(e) {
+      e.preventDefault();
+
+      var url = '{% url "catalog:create_supplier" %}';
+      var csrftoken = '{{ csrf_token }}';
+
+      var supplierData = {
+          supplier_code: $('#supplier_code').val(),
+          supplier_name: $('#supplier_name').val(),
+          category: $('#category').val(),
+          phone_number: $('#phone_number').val(),
+          zalo: $('#zalo').val(),
+          facebook: $('#facebook').val(),
+          website: $('#website').val(),
+          address: $('#address').val(),
+          notes: $('#notes').val(),
+      };
+
+      fetch(url, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrftoken,
+          },
+          body: JSON.stringify(supplierData)
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
+      .then(data => {
+          alert("Loại nguyên vật liệu đã được tạo thành công!");
+          $('#createSupplierModal').modal('hide');
+          $('#createMaterialModal').modal('show');
+
+          $('#supplier').append($('<option>', {
+              value: supplierData.supplier_code + ' - ' + supplierData.supplier_name,
+              text: supplierData.supplier_code + ' - ' + supplierData.supplier_name,
+              selected: true
+          }));
+
+          updateMaterialName();
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          alert("Đã xảy ra lỗi khi thêm nhà cung cấp.");
+      });
+    });
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+    $(document).on('click', '#submitDeleteMaterialBtn', function(e) {
+      e.preventDefault();
+      var material_code = $(this).data('material-code');
+      console.log("Material Code:", material_code);
+      var url = '{% url "catalog:delete_material" material_code="MATERIAL_CODE" %}';
+      url = url.replace("MATERIAL_CODE", material_code);
+      var csrftoken = '{{ csrf_token }}';
+        
+      fetch(url, {
+          method: 'POST', 
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrftoken,
+          },
+          body: JSON.stringify({ material_code: material_code })
+      })
+      .then(response => {
+          if (!response.ok) {
+              return response.json().then(data => { throw new Error(data.error || 'Có lỗi xảy ra'); });
+          }
+          return response.json();
+      })
+      .then(data => {
+          alert(data.message || "Nguyên vật liệu đã được xóa thành công!");
+          location.reload(); 
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          alert(error.message || "Đã xảy ra lỗi khi xóa nguyên vật liệu.");
+      });
+    });
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+    $(document).on('click', '#submitUpdateMaterialBtn', function(e) {
+        e.preventDefault();
+
+        var modal = $(this).closest('.modal');
+        var material_code = $(this).data('material-code');
+        console.log("Material Code:", material_code);
+
+        var url = '{% url "catalog:update_material" material_code="MATERIAL_CODE" %}';
+        url = url.replace("MATERIAL_CODE", material_code);
+        console.log("Request URL:", url);  
+
+        var csrftoken = '{{ csrf_token }}'; 
+
+        var formData = new FormData();
+        var material_code_val = modal.find('#material_code').val();
+        var material_name_val = modal.find('#material_name').val();
+        var supplier_val = modal.find('#supplier').val();
+        var types_val = modal.find('#types').val();
+        var color_val = modal.find('#color').val();
+        var notes_val = modal.find('#notes').val();
+        var stock_min_val = modal.find('#stock_min').val();
+        var stock_max_val = modal.find('#stock_max').val();
+
+        console.log("Material Code:", material_code_val);
+        console.log("Material Name:", material_name_val);
+        console.log("Supplier:", supplier_val);
+        console.log("Types:", types_val);
+        console.log("Color:", color_val);
+        console.log("Notes:", notes_val);
+        console.log("Stock Min:", stock_min_val);
+        console.log("Stock Max:", stock_max_val);
+
+        formData.append('material_code', material_code_val);
+        formData.append('material_name', material_name_val);
+        formData.append('supplier', supplier_val);
+        formData.append('types', types_val);
+        formData.append('color', color_val);
+        formData.append('notes', notes_val);
+        formData.append('stock_min', stock_min_val);
+        formData.append('stock_max', stock_max_val);
+
+        var fileInput = document.querySelector('#image');
+
+        if (fileInput.files.length > 0) {
+            console.log("Selected file:", fileInput.files[0]);
+            formData.append('image', fileInput.files[0]);
+        } else {
+            console.log("No file selected");
+        }
+   
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken 
+            },
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => { throw new Error(data.error || 'Có lỗi xảy ra'); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Server Response:", data);
+            alert(data.message || "Nguyên vật liệu đã được chỉnh sửa thành công!");
+            location.reload(); 
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert(error.message || "Đã xảy ra lỗi khi chỉnh sửa nguyên vật liệu.");
+        });
+    });
+
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+
+  });
+</script>
+{% endblock %}
+

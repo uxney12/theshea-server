@@ -1,0 +1,793 @@
+{% extends "base_generic.html" %}
+{% block content %}
+<main class="col-md-9 col-lg-10 px-0">
+  <div class="d-flex flex-column align-items-start pt-4 pb-3 mb-3" style="background-color: #f5f7fa; border-bottom: solid 1px #e3e6ed;">
+
+    <p class="px-md-5 mb-3" style="font-family: sans-serif; font-size: 1.553125rem; font-weight: 600;">HỒ SƠ NHÂN VIÊN</p>
+    <div class="container-fluid px-md-5">
+      <div class="row align-items-center">
+          <div class="col-auto">
+            <div class="d-flex align-items-center border rounded px-3" style="width: 250px; background: #FFFFFF; border-radius: 5px; border-color: #cbd0dd;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16" class="text-muted">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                </svg>
+                <input type="text" id="search-input" class="form-control border-0 shadow-none bg-transparent ms-2" 
+                placeholder="Tìm kiếm..." style="width: 250px; font-size: .8rem; font-family: 'Nunito'; border-radius: 5px; padding: 6px 12px; " 
+                value="{{ search_query }}" />
+            </div>
+          </div>
+
+          <div class="col"></div>
+  
+          <div class="col-auto d-flex">
+              <a href="#" class="btn custom2-btn me-2" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0;">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+                  </svg>
+              </a>
+              <a href="#" data-bs-toggle="modal" data-bs-target="#uploadFileModal" class="btn custom2-btn me-2" style="display: flex; align-items: center; gap: 8px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="14" height="14" style="vertical-align: middle;">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                  </svg>        
+                  Nhập file
+              </a>
+              <a href="#" data-bs-toggle="modal" data-bs-target="#createEmployeeModal" class="btn custom-btn" style="display: flex; align-items: center; gap: 8px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="16" height="16" style="vertical-align: middle;">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                  Thêm mới
+              </a>
+          </div>
+      </div>
+  </div>
+</div>
+  <!-- Modal Nhập File -->
+  <div class="modal fade" id="uploadFileModal" tabindex="-1" role="dialog" aria-labelledby="uploadFileModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form id="uploadFileForm" method="post" action="" enctype="multipart/form-data">
+          <div class="modal-header">
+            <h5 class="modal-title" id="uploadFileModalLabel">Nhập danh sách loại nguyên vật liệu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group mb-2">
+              <label for="file" class="mb-2">Chọn file Excel:</label>
+              <input type="file" id="file" name="file" class="form-control" accept=".xls,.xlsx">
+            </div>
+            <div class="form-group mb-2">
+              <label for="sheetUrl" class="mb-2">URL của Google Sheets:</label>
+              <input type="text" id="sheetUrl" name="sheetUrl" class="form-control">
+            </div>
+            <div class="form-group mb-2">
+              <small class="form-text text-muted">Lưu ý: Hãy đảm bảo rằng liên kết Google Sheets đã được mở ở chế độ công khai.</small>
+            </div>
+            <div class="form-group mb-2">
+              <p>
+                Tải file mẫu danh sách nguyên vật liệu <a href="https://docs.google.com/spreadsheets/d/186Q4LFBS6F7xxGe_FEbCzbKRc-Np4PWllPmERnwHtPU/edit?gid=0#gid=0" target="_blank">tại đây</a>.
+              </p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Hủy</button>
+            <button type="submit" class="btn submit-btn" id="submitUploadFileBtn">Nhập & Đóng</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Tạo mới nhân viên -->
+  <div class="modal fade" id="createEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="createEmployeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 800px; width: 100%; height: 460px;">
+        <div class="modal-content" style="height: 100%; overflow-y: auto;">
+            <form id="createForm" method="post" action="" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createEmployeeModalLabel" style="color:#CBA230">Thêm mới Nhân viên</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="height: calc(100% - 125spx); overflow-y: auto;">
+                    <div class="row mb-4">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-1 text-center">
+                            <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 2px solid #ccccccbc;">
+                                <img src="/media/employee_images/avatar.jpg" 
+                                     id="avatar" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>                            
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <label for="image" class="btn mt-2" style="background-color: #e7f0ff; color: #1756c2; padding: 6px 8px; border-radius: 20px; cursor: pointer; display: inline-block;">
+                                Tải file
+                                <input type="file" id="image" name="image" class="d-none" accept="image/*">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-4">
+                            <label for="employee_name" class="form-label">Họ và tên:</label>
+                            <input type="text" id="employee_name" name="employee_name" class="form-control custom-input">
+                        </div>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-4">
+                            <label for="gender" class="form-label">Giới tính:</label>
+                            <select id="gender" name="gender" class="form-control custom-input">
+                                <option value="">-- Chọn Giới tính --</option>
+                                <option value="Nam">Nam</option>  
+                                <option value="Nữ">Nữ</option>
+                                <option value="Khác">Khác</option>
+                              </select>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-4">
+                            <label for="date_of_birth" class="form-label">Ngày sinh:</label>
+                            <input type="date" id="date_of_birth" name="date_of_birth" class="form-control custom-input">
+                        </div>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-4">
+                            <label for="phone_number" class="form-label">Điện thoại:</label>
+                            <input type="text" id="phone_number" name="phone_number" class="form-control custom-input">
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>         
+                    <div class="row mb-2">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-4">
+                            <label for="address" class="form-label">Địa chỉ:</label>
+                            <input type="text" id="address" name="address" class="form-control custom-input">
+                        </div>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-4">
+                            <label for="department" class="form-label">Phòng ban:</label>
+                            <select id="department" name="department" class="form-control custom-input">
+                                <option value="">-- Chọn Phòng ban --</option>
+                                <option value="Sản xuất">Sản xuất</option>  
+                                <option value="Thiết kế">Thiết kế</option>
+                                <option value="Khác">Khác</option>
+                              </select>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-4">
+                            <label for="position" class="form-label">Chức danh:</label>
+                            <input type="text" id="position" name="position" class="form-control custom-input">
+                        </div>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-4">
+                            <label for="employment_status" class="form-label">Trạng thái làm việc:</label>
+                            <select id="employment_status" name="employment_status" class="form-control custom-input">
+                                <option value="">-- Chọn Trạng thái việc làm --</option>
+                                <option value="active">Đang làm việc</option>  
+                                <option value="inactive">Đã nghỉ việc</option>
+                              </select>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                        <button type="button" class="btn cancel-btn" data-bs-dismiss="modal" style="width: 150px;">Hủy</button>
+                        <button type="submit" class="btn submit-btn" id="submitAddEmployeeBtn" style="width: 150px;">Tạo mới & Đóng</button>
+                </div>
+              </form>
+          </div>
+      </div>
+  </div>
+
+
+  <!-- Bảng loại nguyên vật liệu -->
+  {% if employee_page %}
+  <div class="table-responsive scrollbar px-md-5">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>
+            <a href="?sort_field=employee_code&sort_order={% if current_sort_field == 'employee_code' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="{% if current_sort_field == 'employee_code' %}{{ current_sort_order }}{% endif %}">
+              MÃ NHÂN VIÊN
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=employee_name&sort_order={% if current_sort_field == 'employee_name' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="{% if current_sort_field == 'employee_name' %}{{ current_sort_order }}{% endif %}">
+              HỌ VÀ TÊN
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=gender&sort_order={% if current_sort_field == 'gender' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="{% if current_sort_field == 'gender' %}{{ current_sort_order }}{% endif %}">
+              GIỚI TÍNH
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=date_of_birth&sort_order={% if current_sort_field == 'date_of_birth' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="{% if current_sort_field == 'date_of_birth' %}{{ current_sort_order }}{% endif %}">
+              NGÀY SINH
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=phone_number&sort_order={% if current_sort_field == 'phone_number' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="{% if current_sort_field == 'phone_number' %}{{ current_sort_order }}{% endif %}">
+              ĐIỆN THOẠI
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=department&sort_order={% if current_sort_field == 'department' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="{% if current_sort_field == 'department' %}{{ current_sort_order }}{% endif %}">
+              PHÒNG BAN
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=position&sort_order={% if current_sort_field == 'position' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="{% if current_sort_field == 'position' %}{{ current_sort_order }}{% endif %}">
+              CHỨC DANH
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=employment_status&sort_order={% if current_sort_field == 'employment_status' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="{% if current_sort_field == 'employment_status' %}{{ current_sort_order }}{% endif %}">
+              TRẠNG THÁI
+            </a>
+          </th>
+          <th>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for employee in employee_page %}
+        <tr>
+            <td>
+                {% if employee.image %}
+                    <img src="{{ employee.image.url }}" alt="Hình ảnh nhân viên" class="img-fluid" 
+                         style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #ccccccbc; object-fit: cover;">
+                {% else %}
+                    <img src="/media/employee_images/avatar.jpg" alt="Không có hình ảnh" class="img-fluid" 
+                         style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #ccccccbc; object-fit: cover;">
+                {% endif %}
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="#" class="id-table" data-bs-toggle="modal" 
+                   data-bs-target="#modalDetail{{ employee.employee_code }}">
+                    {{ employee.employee_code }}
+                </a>
+            </td>
+            <td>{{ employee.employee_name|default:''  }}</td>
+            <td>{{ employee.gender|default:''  }}</td>
+            <td>{{ employee.date_of_birth|date:'d/m/Y'|default:''  }}</td>
+            <td>{{ employee.phone_number|default:''  }}</td>
+            <td>{{ employee.department|default:''  }}</td>
+            <td>{{ employee.position|default:''  }}</td>
+            <td>    
+                {% if employee.employment_status == 'active' %}
+                <span class="btn-order-complete">
+                    Đang làm việc
+                </span>
+                {% elif employee.employment_status == 'inactive' %}
+                <span class="btn-order-cancel">
+                    Đã nghỉ việc
+                </span>
+                {% endif %}
+            </td>
+            <td>
+                <a href="#" class="icon-table" data-bs-toggle="modal" data-bs-target="#modalUpdate{{ employee.employee_code }}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                </svg>              
+                </a>
+                <a href="#" class="icon-table" data-bs-toggle="modal" data-bs-target="#modalDelete{{ employee.employee_code }}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                </svg>              
+                </a>
+            </td>
+        </tr>
+
+        <!-- Modal detail nhân viên -->
+        <div class="modal fade" id="modalDetail{{ employee.employee_code }}" tabindex="-1" aria-labelledby="modalDetailLabel{{ employee.employee_code }}" aria-hidden="true">
+          <div class="modal-dialog" role="document" style="max-width: 800px; width: 100%; height: 360px;">
+            <div class="modal-content" style="height: 100%; overflow-y: auto;">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="modalDetailLabel{{ employee.employee_code }}" class="personal-info">{{ employee.employee_code }} | {{ employee.employee_name }}</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="container">
+                      <div class="row">
+                        <div class="col-md-4">
+                          {% if employee.image %}
+                            <img src="{{ employee.image.url }}" alt="Hình ảnh nguyên vật liệu" class="img-fluid" style="max-width: 220px; max-height: 180px;">
+                          {% else %}
+                            <img src="/media/employee_images/employee.jpg" alt="Không có hình ảnh" class="img-fluid" style="max-width: 220px; max-height: 180px;">
+                          {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                          <div class="row mb-2">
+                            <div class="col-md-4" style="white-space: nowrap;">
+                              <strong>Họ và tên:</strong>
+                            </div>
+                            <div class="col-md-8">
+                              <span>{{ employee.employee_name|default:'-' }}</span>
+                            </div>
+                          </div>
+                          <div class="row mb-2">
+                            <div class="col-md-4" style="white-space: nowrap;">
+                              <strong>Ngày sinh:</strong>
+                            </div>
+                            <div class="col-md-8">
+                              <span>{{ employee.date_of_birth|date:"d/m/Y"|default:'-' }}</span>
+                            </div>
+                          </div>
+                          <div class="row mb-2">
+                            <div class="col-md-4">
+                              <strong>Giới tính:</strong>
+                            </div>
+                            <div class="col-md-8">
+                              <span>{{ employee.gender|default:'-' }}</span>
+                            </div>
+                          </div>
+                          <div class="row mb-2">
+                            <div class="col-md-4">
+                              <strong>Số điện thoại:</strong>
+                            </div>
+                            <div class="col-md-8">
+                              <span>{{ employee.phone_number|default:'-' }}</span>
+                            </div>
+                          </div>
+                          <div class="row mb-2">
+                            <div class="col-md-4">
+                              <strong>Phòng ban:</strong>
+                            </div>
+                            <div class="col-md-8">
+                              <span>{{ employee.department|default:'-' }}</span>
+                            </div>
+                          </div>
+                          <div class="row mb-2">
+                            <div class="col-md-4">
+                              <strong>Chức vụ:</strong>
+                            </div>
+                            <div class="col-md-8">
+                              <span>{{ employee.position|default:'-' }}</span>
+                            </div>
+                          </div>
+                          <div class="row mb-2">
+                            <div class="col-md-4">
+                              <strong>Trạng thái làm việc:</strong>
+                            </div>
+                            <div class="col-md-8">
+                              <span>
+                                {% if employee.employment_status == "active" %}
+                                    Đang làm việc
+                                {% elif employee.employment_status == "inactive" %}
+                                    Đã nghỉ việc
+                                {% endif %}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Đóng</button>
+                  </div>
+              </div>
+          </div>
+        </div>
+
+          <!-- Modal update -->
+          <div class="modal fade" id="modalUpdate{{ employee.employee_code }}" tabindex="-1" aria-labelledby="modalUpdateLabel{{ employee.employee_code }}" aria-hidden="true">
+            <div class="modal-dialog" role="document" style="max-width: 800px; width: 100%; height: 460px;">
+              <div class="modal-content" style="height: 100%; overflow-y: auto;">
+                  <form id="uploadFileForm" method="post" action="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="updateCategoryModalLabel">Điều chỉnh Nhân viên</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="height: calc(100% - 125px); overflow-y: auto;">
+                        <div class="row mb-4">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-1 text-center">                      
+                                {% if employee.image %}
+                                    <img src="{{ employee.image.url }}" alt="Hình ảnh nhân viên" class="img-fluid" 
+                                        style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #ccccccbc; object-fit: cover;">
+                                {% else %}
+                                    <img src="/media/employee_images/avatar.jpg" alt="Không có hình ảnh" class="img-fluid" 
+                                        style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #ccccccbc; object-fit: cover;">
+                                {% endif %}     
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <label for="image" class="btn mt-2" style="background-color: #e7f0ff; color: #1756c2; padding: 6px 8px; border-radius: 20px; cursor: pointer; display: inline-block;">
+                                    Tải file
+                                    <input type="file" id="image" name="image" class="d-none" accept="image/*">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-4">
+                                <label for="employee_name" class="form-label">Họ và tên:</label>
+                                <input type="text" id="employee_name" name="employee_name" class="form-control custom-input" value="{{ employee.employee_name }}">
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-4">
+                                <label for="gender" class="form-label">Giới tính:</label>
+                                <select id="gender" name="gender" class="form-control custom-input">
+                                    <option value="{{ employee.gender }}">{{ employee.gender }}</option>
+                                    <option value="">-- Chọn Giới tính --</option>
+                                    <option value="Nam">Nam</option>  
+                                    <option value="Nữ">Nữ</option>
+                                    <option value="Khác">Khác</option>
+                                  </select>
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-4">
+                                <label for="date_of_birth" class="form-label">Ngày sinh:</label>
+                                <input type="date" id="date_of_birth" name="date_of_birth" class="form-control custom-input" value="{{ employee.date_of_birth|date:'Y-m-d' }}">
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-4">
+                                <label for="phone_number" class="form-label">Điện thoại:</label>
+                                <input type="text" id="phone_number" name="phone_number" class="form-control custom-input" value="{{ employee.phone_number }}">
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>         
+                        <div class="row mb-2">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-4">
+                                <label for="address" class="form-label">Địa chỉ:</label>
+                                <input type="text" id="address" name="address" class="form-control custom-input" value="{{ employee.address }}">
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-4">
+                                <label for="department" class="form-label">Phòng ban:</label>
+                                <select id="department" name="department" class="form-control custom-input">
+                                    <option value="{{ employee.department }}">{{ employee.department }}</option>
+                                    <option value="">-- Chọn Phòng ban --</option>
+                                    <option value="Sản xuất">Sản xuất</option>  
+                                    <option value="Thiết kế">Thiết kế</option>
+                                    <option value="Khác">Khác</option>
+                                  </select>
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-4">
+                                <label for="position" class="form-label">Chức danh:</label>
+                                <input type="text" id="position" name="position" class="form-control custom-input" value="{{ employee.position }}">
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="col-md-4">
+                                <label for="employment_status" class="form-label">Trạng thái làm việc:</label>
+                                <select id="employment_status" name="employment_status" class="form-control custom-input">
+                                    <option value="{{ employee.employment_status }}">
+                                        {% if employee.employment_status == "active" %}
+                                            Đang làm việc
+                                        {% elif employee.employment_status == "inactive" %}
+                                            Đã nghỉ việc
+                                        {% endif %}
+                                    </option>
+                                    <option value="">-- Chọn Trạng thái việc làm --</option>
+                                    <option value="active">Đang làm việc</option>  
+                                    <option value="inactive">Đã nghỉ việc</option>
+                                </select>                                
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn cancel-btn" data-bs-dismiss="modal" style="width: 150px;">Hủy</button>
+                      <button type="submit" class="btn submit-btn" id="submitUpdateSupplierBtn" data-employee-code="{{ employee.employee_code }}" style="width: 150px;">Chỉnh sửa & Đóng</button>
+                    </div>
+                  </form>
+                </div>
+            </div>
+          </div>
+
+          <!-- Modal delete -->
+          <div class="modal fade" id="modalDelete{{ employee.employee_code }}" tabindex="-1" aria-labelledby="modalDeleteLabel{{ employee.employee_code }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                  <form id="uploadFileForm" method="post" action="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="deleteCategoryModalLabel">Xóa nhân viên</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Bạn chắc chắn muốn xóa nhân viên <strong>{{ employee.employee_name }}</strong>?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn submit-btn" id="submitDeleteEmployeeBtn" data-employee-code="{{ employee.employee_code }}">Xóa & Đóng</button>
+                    </div>
+                  </form>
+                </div>
+            </div>
+          </div>
+
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p>Không có bất kỳ nhà cung cấp nào.</p>
+  {% endif %}
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        {% if employee_page.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ employee_page.previous_page_number }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}&search={{ search_query }}" aria-label="Previous">
+                    <span aria-hidden="true">&lsaquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&lsaquo;</span>
+                </a>
+            </li>
+        {% endif %}
+
+        {% for num in employee_page.paginator.page_range %}
+            {% if employee_page.number == num %}
+                <li class="page-item active">
+                    <a class="page-link" href="?page={{ num }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}&search={{ search_query }}">{{ num }}</a>
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}&search={{ search_query }}">{{ num }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if employee_page.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ employee_page.next_page_number }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}&search={{ search_query }}" aria-label="Next">
+                    <span aria-hidden="true">&rsaquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&rsaquo;</span>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+  $(document).ready(function() {
+
+    
+    document.getElementById('search-input').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') { 
+            const searchValue = this.value;
+            const url = new URL(window.location.href);
+            url.searchParams.set('search', searchValue);
+            url.searchParams.set('page', 1); 
+            window.location.href = url.toString();
+        }
+    });
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+    $('#submitUploadFileBtn').click(function(e) {
+      e.preventDefault();
+
+      var url = '{% url "catalog:upload_employee" %}';
+      var csrftoken = '{{ csrf_token }}';
+      var fileInput = document.getElementById('file').files[0];
+      var sheetUrl = document.getElementById('sheetUrl').value;
+      var formData = new FormData();
+
+      if (fileInput) {
+        formData.append('file', fileInput);
+      } else if (sheetUrl) {
+        formData.append('sheetUrl', sheetUrl);
+      } else {
+        alert("Vui lòng chọn file hoặc nhập URL của Google Sheets.");
+        return;
+      }
+
+      fetch(url, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': csrftoken,
+        },
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        alert("Tệp đã được tải lên và xử lý thành công");
+        $('#uploadFileModal').modal('hide');
+        window.location.reload(); 
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert("Đã xảy ra lỗi khi xử lý tệp.");
+      });
+    });
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+    
+    $('#submitAddEmployeeBtn').click(function(e) {
+        e.preventDefault();
+
+        var url = '{% url "catalog:create_employee" %}';
+        var csrftoken = '{{ csrf_token }}';
+
+        var employeeData = new FormData();
+        employeeData.append('employee_code', $('#employee_code').val());
+        employeeData.append('employee_name', $('#employee_name').val());
+        employeeData.append('position', $('#position').val());
+        employeeData.append('department', $('#department').val());
+        employeeData.append('phone_number', $('#phone_number').val());
+        employeeData.append('gender', $('#gender').val());
+        employeeData.append('date_of_birth', $('#date_of_birth').val());
+        employeeData.append('address', $('#address').val());
+        employeeData.append('employment_status', $('#employment_status').val());
+
+        var fileInput = $('#image')[0];
+        if (fileInput.files.length > 0) {
+            employeeData.append('image', fileInput.files[0]);
+        }
+
+        console.log("Dữ liệu nhân viên trước khi gửi:");
+        for (var pair of employeeData.entries()) {
+            console.log(pair[0] + ':', pair[1]);
+        }
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken, 
+            },
+            body: employeeData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Phản hồi từ server:", data);
+            alert("Nhân viên mới đã được tạo thành công!");
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Lỗi:', error);
+            alert("Đã xảy ra lỗi khi thêm nhân viên mới.");
+        });
+    });
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+    $(document).on('click', '#submitDeleteEmployeeBtn', function(e) {
+        e.preventDefault();
+        var employee_code = $(this).data('employee-code');
+        console.log("Employee Code:", employee_code);
+        var url = '{% url "catalog:delete_employee" employee_code="EMPLOYEE_CODE" %}';
+        url = url.replace("EMPLOYEE_CODE", employee_code);
+        var csrftoken = '{{ csrf_token }}';
+        
+        fetch(url, {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({ employee_code: employee_code })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => { throw new Error(data.error || 'Có lỗi xảy ra'); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert(data.message || "Nhân viên đã được xóa thành công!");
+            location.reload(); 
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert(error.message || "Đã xảy ra lỗi khi xóa nhân viên.");
+        });
+        });
+
+    // ///////////////////////////
+    // ///////////////////////////
+    // ///////////////////////////
+
+    $(document).on('click', '#submitUpdateSupplierBtn', function(e) {
+        e.preventDefault();
+
+        var modal = $(this).closest('.modal');
+
+        var employee_code = $(this).data('employee-code');
+        console.log("Employee Code:", employee_code);
+
+        var url = '{% url "catalog:update_employee" employee_code="EMPLOYEE_CODE" %}';
+        url = url.replace("EMPLOYEE_CODE", employee_code);
+        var csrftoken = '{{ csrf_token }}';
+
+        var employeeData = new FormData();
+        employeeData.append('employee_code', modal.find('#employee_code').val());
+        employeeData.append('employee_name', modal.find('#employee_name').val());
+        employeeData.append('position', modal.find('#position').val());
+        employeeData.append('department', modal.find('#department').val());
+        employeeData.append('phone_number', modal.find('#phone_number').val());
+        employeeData.append('gender', modal.find('#gender').val());
+        employeeData.append('date_of_birth', modal.find('#date_of_birth').val());
+        employeeData.append('address', modal.find('#address').val());
+        employeeData.append('employment_status', modal.find('#employment_status').val());
+
+        var fileInput = document.querySelector('#image');
+
+        if (fileInput.files.length > 0) {
+            console.log("Selected file:", fileInput.files[0]);
+            employeeData.append('image', fileInput.files[0]);
+        } else {
+            console.log("No file selected");
+        }
+
+        console.log("Dữ liệu nhân viên trước khi gửi:");
+        for (var pair of employeeData.entries()) {
+            console.log(pair[0] + ":", pair[1]);
+        }
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+            body: employeeData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Phản hồi từ server:", data);
+            alert("Nhân viên đã được cập nhật thành công!");
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Lỗi:', error);
+            alert("Đã xảy ra lỗi khi cập nhật nhân viên.");
+        });
+    });
+
+
+  });
+</script>
+{% endblock %}
+

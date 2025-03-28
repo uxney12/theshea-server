@@ -1,0 +1,66 @@
+<div id="chat-container">
+    <div id="chat-header">
+        <span>Chatbot Gemini</span>
+        <button id="close-chat">×</button>
+    </div>
+    <div id="chat-body"></div>
+    <div id="chat-footer">
+        <input type="text" id="chat-input" placeholder="Nhập tin nhắn...">
+        <button id="send-chat">Gửi</button>
+    </div>
+</div>
+<button id="open-chat">💬</button>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const chatContainer = document.getElementById("chat-container");
+    const openChat = document.getElementById("open-chat");
+    const closeChat = document.getElementById("close-chat");
+    const chatBody = document.getElementById("chat-body");
+    const chatInput = document.getElementById("chat-input");
+    const sendChat = document.getElementById("send-chat");
+
+    openChat.addEventListener("click", function () {
+        chatContainer.style.display = "block";
+        openChat.style.display = "none";
+    });
+
+    closeChat.addEventListener("click", function () {
+        chatContainer.style.display = "none";
+        openChat.style.display = "block";
+    });
+
+    function sendMessage() {
+        const message = chatInput.value.trim();
+        if (!message) return;
+
+        chatBody.innerHTML += `<div class="user-message">${message}</div>`;
+        chatInput.value = "";
+
+        fetch("/chatwithgemini/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}",
+            },
+            body: JSON.stringify({ message }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.response) {
+                chatBody.innerHTML += `<div class="bot-message">${data.response}</div>`;
+            }
+        });
+    }
+
+    sendChat.addEventListener("click", sendMessage);
+    
+    chatInput.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault(); 
+            sendMessage();
+        }
+    });
+});
+
+</script>

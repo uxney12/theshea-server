@@ -1,0 +1,1370 @@
+{% extends "base_generic.html" %}
+{% block content %}
+<main class="col-md-9 col-lg-10 px-0">
+  <div class="d-flex flex-column align-items-start pt-4 pb-3 mb-3" style="background-color: #f5f7fa; border-bottom: solid 1px #e3e6ed;">
+    <p class="px-md-5 mb-3" style="font-family: sans-serif; font-size: 1.453125rem; font-weight: 600;">QUẢN LÝ ĐẶT HÀNG</p>
+
+
+    <div class="container-fluid px-md-5">
+      <div class="row align-items-center">
+          <div class="col-auto">
+            <div class="d-flex align-items-center border rounded px-3" style="width: 250px; background: #FFFFFF; border-radius: 5px; border-color: #cbd0dd;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16" class="text-muted">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                </svg>
+                <input type="text" id="search-input" class="form-control border-0 shadow-none bg-transparent ms-2" 
+                placeholder="Tìm kiếm..." style="width: 250px; font-size: .8rem; font-family: 'Nunito'; border-radius: 5px; padding: 6px 12px; " 
+                value="{{ search_query }}" />
+            </div>
+          </div>
+
+          <div class="col"></div>
+  
+          <div class="col-auto d-flex">
+              <a href="#" class="btn custom2-btn me-2" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0;">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+                  </svg>
+              </a>
+              <a href="#" data-bs-toggle="modal" data-bs-target="#uploadFileModal" class="btn custom2-btn me-2" style="display: flex; align-items: center; gap: 8px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="14" height="14" style="vertical-align: middle;">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                  </svg>        
+                  Nhập file
+              </a>
+              <a href="#" data-bs-toggle="modal" data-bs-target="#createOrderModal" class="btn custom-btn" style="display: flex; align-items: center; gap: 8px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="16" height="16" style="vertical-align: middle;">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                  Thêm mới
+              </a>
+          </div>
+      </div>
+  </div>
+  
+    
+</div>
+
+
+  <!-- Modal Nhập File -->
+  <div class="modal fade" id="uploadFileModal" tabindex="-1" role="dialog" aria-labelledby="uploadFileModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form id="uploadFileForm" method="post" action="" enctype="multipart/form-data">
+          <div class="modal-header">
+            <h5 class="modal-title" id="uploadFileModalLabel">Nạp dữ liệu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group mb-2">
+              <label for="file" class="mb-2">Chọn file Excel:</label>
+              <input type="file" id="file" name="file" class="form-control" accept=".xls,.xlsx">
+            </div>
+            <div class="form-group mb-2">
+              <label for="sheetUrl" class="mb-2">URL của Google Sheets:</label>
+              <input type="text" id="sheetUrl" name="sheetUrl" class="form-control">
+            </div>
+            <div class="form-group mb-2">
+              <small class="form-text text-muted">Lưu ý: Hãy đảm bảo rằng liên kết Google Sheets đã được mở ở chế độ công khai.</small>
+            </div>
+            <div class="form-group mb-2">
+              <p>
+                Tải file mẫu danh sách nguyên vật liệu <a href="https://docs.google.com/spreadsheets/d/1bOzWU9gEPqvkFka-3NDyTM1dm7HZJQdT7lSAlJEcITw/edit?gid=1655250114#gid=1655250114" target="_blank">tại đây</a>.
+              </p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Hủy</button>
+            <button type="submit" class="btn submit-btn" id="submitUploadFileBtn">Nạp & Đóng</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Tạo mới phiếu đặt hàng -->
+  <div class="modal fade" id="createOrderModal" tabindex="-1" role="dialog" aria-labelledby="createOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 800px; width: 100%; height: 565px;">
+        <div class="modal-content" style="height: 100%; overflow-y: auto;">
+            <form id="createForm" method="post" action="" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createOrderModalLabel" style="color:#CBA230">Tạo phiếu đặt hàng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="height: calc(100% - 125spx); overflow-y: auto;">
+                    <div class="row mb-2">
+                        <div class="col-md-2 d-flex align-items-center" style="white-space: nowrap;">
+                            <label for="order_code">Mã phiếu nhập:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <input type="text" id="order_code" name="order_code" class="form-control custom-input" value="{{ new_order_code }}" readonly>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center" style="white-space: nowrap;">
+                            <label for="order_date">Ngày đặt hàng:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                          <input type="date" id="order_date" name="order_date" class="form-control custom-input" value="{{ current_time|date:'Y-m-d' }}">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-2 d-flex align-items-center">
+                          <label for="supplier">Nhà cung cấp:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <select id="supplier-select" name="supplier" class="form-control supplier-select">
+                                <option value="">-- Chọn Nhà cung cấp --</option>
+                                {% for sup in supplier %}
+                                    <option value="{{ sup.supplier_code }}">{{ sup.supplier_code }} - {{ sup.supplier_name }}</option>
+                                {% endfor %}
+                                <option value="add-new-supplier" data-bs-toggle="modal" data-bs-target="#createSupplierModal">+ Thêm nhà cung cấp</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center" style="white-space: nowrap;">
+                            <label for="expected_date">Ngày dự kiến nhận:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <input type="date" id="expected_date" name="expected_date" class="form-control custom-input">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-2 d-flex align-items-center">
+                            <label for="total_quantity">Số lượng đặt:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <input type="text" id="total_quantity" name="total_quantity" class="form-control custom-input" readonly>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center">
+                            <label for="payment_method">Phương thức:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                          <select id="payment_method" name="payment_method" class="form-control">
+                            <option value="">-- Chọn Phương thức thanh toán --</option>
+                            <option value="Tiền mặt">Tiền mặt</option>  
+                            <option value="Chuyển khoản">Chuyển khoản</option>
+                            <option value="Thẻ">Thẻ</option>
+                          </select>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                      <div class="col-md-2 d-flex align-items-center">
+                          <label for="total_amount">Tổng tiền:</label>
+                      </div>
+                      <div class="col-md-4 d-flex align-items-center">
+                          <input type="text" id="total_amount" name="total_amount" class="form-control custom-input" readonly>
+                      </div>
+                      <div class="col-md-2 d-flex align-items-center">
+                          <label for="prepaid">Trả trước:</label>
+                      </div>
+                      <div class="col-md-4 d-flex align-items-center">
+                          <input type="text" id="prepaid" name="prepaid" class="form-control custom-input" value="0">
+                      </div>
+                  </div>
+                    <div class="row mb-2">
+                        <div class="col-md-2 d-flex align-items-center">
+                            <label for="note">Ghi chú:</label>
+                        </div>
+                        <div class="col-md-10 d-flex align-items-center">
+                            <input type="text" id="note" name="note" class="form-control custom-input">
+                        </div>
+                    </div>      
+                    <hr color="#dee2e6">
+                    <div id="orderlines-container">
+                      <div class="each-orderline">
+                        <div class="orderline row mb-2">
+                            <div class="col-md-12 d-flex align-items-center">
+                                <span style="color:#CBA230">Nguyên vật liệu&nbsp;</span>
+                                <label class="order_line_code" style="color:#CBA230"> 1</label>
+                            </div>
+                        </div>
+                        <div class="orderline row mb-2">
+                            <div class="col-md-2 d-flex align-items-center" style="white-space: nowrap;">
+                                <label for="material">Nguyên vật liệu:</label>
+                            </div>
+                            <div class="col-md-10 d-flex align-items-center">
+                              <select id="material-select" name="material" class="form-control material-select">
+                                    <option value="">-- Chọn Nguyên vật liệu --</option>
+                                    <option value="add-new-material" data-bs-toggle="modal" data-bs-target="#createMaterialModal">+ Thêm nguyên vật liệu</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="orderline row mb-2">
+                            <div class="col-md-2 d-flex align-items-center">
+                                <label for="quantity">Số lượng:</label>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center">
+                                <input type="text" name="quantity" class="form-control quantity" min="0">
+                            </div>
+                            <div class="col-md-2 d-flex align-items-center">
+                                <label for="unit_of_measure">Đơn vị tính:</label>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center">
+                              <select id="unit_of_measure" name="unit_of_measure" class="form-control unit_of_measure">
+                                <option value="">-- Chọn Đơn vị tính --</option>
+                                <option value="M">M</option>  
+                                <option value="Cái">Cái</option>
+                                <option value="Cuộn">Cuộn</option>
+                              </select>
+                            </div>
+                        </div>
+                        <div class="orderline row mb-2">
+                            <div class="col-md-2 d-flex align-items-center">
+                                <label for="price">Đơn giá:</label>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center">
+                                <input type="text" name="price" class="form-control price">
+                            </div>
+                            <div class="col-md-2 d-flex align-items-center">
+                                <label for="total">Thành tiền:</label>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center">
+                                <input type="text" name="total" class="form-control total" readonly>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="text-start mt-2">
+                      <button type="button" class="btn" id="add-orderline" style="background-color: #1da955; border-color: #1da955; color: white; width: 40px; min-width: auto; padding: 5px;">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="16" height="16" style="vertical-align: middle;">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                          </svg>
+                      </button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn cancel-btn" data-bs-target="#createOrderModal" data-bs-toggle="modal" data-bs-dismiss="modal" style="width: 150px;">Hủy</button>
+                    <button class="btn submit-btn" id="submitCreateOrderBtn" style="width: 150px;">Tạo mới & Đóng</button>
+                </div>
+              </form>
+          </div>
+      </div>
+  </div>
+  
+  
+  <!-- Bảng nguyên vật liệu -->
+  {% if order_page %}
+  <div class="table-responsive scrollbar px-md-5">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>
+            <a href="?sort_field=order_code&sort_order={% if current_sort_field == 'order_code' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="{% if current_sort_field == 'order_code' %}{{ current_sort_order }}{% endif %}">
+              MÃ PHIẾU ĐẶT
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=order_date&sort_order={% if current_sort_field == 'order_date' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="{% if current_sort_field == 'order_date' %}{{ current_sort_order }}{% endif %}">
+              NGÀY ĐẶT HÀNG
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=expected_date&sort_order={% if current_sort_field == 'expected_date' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="{% if current_sort_field == 'expected_date' %}{{ current_sort_order }}{% endif %}">
+              NGÀY NHẬN DỰ KIẾN
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=supplier__supplier_name&sort_order={% if current_sort_field == 'supplier__supplier_name' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+            class="{% if current_sort_field == 'supplier__supplier_name' %}{{ current_sort_order }}{% endif %}">
+              NHÀ CUNG CẤP
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=total_quantity&sort_order={% if current_sort_field == 'total_quantity' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+            class="{% if current_sort_field == 'total_quantity' %}{{ current_sort_order }}{% endif %}">
+              SỐ LƯỢNG ĐẶT
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=total_amount&sort_order={% if current_sort_field == 'total_amount' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+            class="{% if current_sort_field == 'total_amount' %}{{ current_sort_order }}{% endif %}">
+              GIÁ TRỊ PHIẾU
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=status&sort_order={% if current_sort_field == 'status' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+            class="{% if current_sort_field == 'status' %}{{ current_sort_order }}{% endif %}">
+              TRẠNG THÁI
+            </a>
+          </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in order_page %}
+        <tr>
+          <td>
+            <a href="#" class="id-table" data-bs-toggle="modal" data-bs-target="#modalDetail{{ order.order_code }}">
+                {{ order.order_code }}
+            </a>
+          </td>
+          <td>{{ order.order_date|date:'d/m/Y'|default:'' }}</td>
+          <td>{{ order.expected_date|date:'d/m/Y'|default:'' }}</td>
+          <td>
+            <a href="#" class="id-table" data-bs-toggle="modal" data-bs-target="#modalDetail{{ order.supplier.supplier_code }}">
+              {{ order.supplier|default:'' }}
+            </a>
+          </td>
+          <td>{{ order.total_quantity|default:'' }}</td>
+          <td>{{ order.total_amount|default:'' }}</td>
+          <td>    
+            {% if order.status == 'completed' %}
+            <span class="btn-order-complete">
+                Hoàn thành
+              </span>
+            {% elif order.status == 'cancelled' %}
+            <span class="btn-order-cancel">
+                Đã hủy
+              </span>
+            {% endif %}
+          </td>
+          <td>
+            {% if order.status != 'cancelled' %}
+            <a href="#" class="icon-table" data-bs-toggle="modal" data-bs-target="#modalUpdate{{ order.order_code }}">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+              </svg>              
+            </a>
+            <a href="#" class="icon-table" data-bs-toggle="modal" data-bs-target="#modalDelete{{ order.order_code }}">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+              </svg>              
+            </a>
+            {% endif %}
+          </td>
+        </tr>
+
+          <!-- Modal detail phiếu đặt hàng -->
+          <div class="modal fade" id="modalDetail{{ order.order_code }}" tabindex="-1" aria-labelledby="modalDetailLabel{{ order.order_code }}" aria-hidden="true">
+            <div class="modal-dialog" role="document" style="max-width: 800px; width: 100%; height: 440px;">
+              <div class="modal-content" style="height: 100%; overflow-y: auto;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalDetailLabel{{ order.order_code }}" class="personal-info" style="color:#CBA230">{{ order.order_code }} | {{ order.supplier }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="container">
+                        <div class="row mb-2">
+                          <div class="col-md-2" style="white-space: nowrap;">
+                            <strong>Mã phiếu đặt:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ order.order_code|default:'-' }}</span>
+                          </div>
+                          <div class="col-md-2" style="white-space: nowrap;">
+                            <strong>Ngày đặt hàng:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ order.order_date|date:'d/m/Y'|default:'-' }}</span>
+                          </div>
+                        </div>
+                        <div class="row mb-2">
+                          <div class="col-md-2" style="white-space: nowrap;">
+                            <strong>Nhà cung cấp:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ order.supplier.supplier_name|default:'-' }}</span>
+                          </div>
+                          <div class="col-md-2" style="white-space: nowrap;">
+                            <strong>Ngày dự kiến nhận:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ order.expected_date|date:'d/m/Y'|default:'-' }}</span>
+                          </div>
+                        </div>
+                        <div class="row mb-2">
+                          <div class="col-md-2" style="white-space: nowrap;">
+                            <strong>Số lượng đặt:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ order.total_quantity|default:'-' }}</span>
+                          </div>
+                          <div class="col-md-2">
+                            <strong>Phương thức:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ order.payment_method|default:'-' }}</span>
+                          </div>
+                        </div>
+                        <div class="row mb-2">
+                          <div class="col-md-2" style="white-space: nowrap;">
+                            <strong>Tổng tiền:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ order.total_amount|default:'-' }}</span>
+                          </div>
+                          <div class="col-md-2">
+                            <strong>Trả trước:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ order.prepaid|default:'-' }}</span>
+                          </div>
+                        </div>
+                        <div class="row mb-2">
+                          <div class="col-md-2">
+                            <strong>Ghi chú:</strong>
+                          </div>
+                          <div class="col-md-10">
+                            <span>{{ order.note|default:'-' }}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <hr color="#dee2e6"> 
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+
+          <!-- Modal detail -->
+          <div class="modal fade" id="modalDetail{{ order.supplier.supplier_code }}" tabindex="-1" aria-labelledby="modalDetailLabel{{ order.supplier.supplier_code }}" aria-hidden="true">
+            <div class="modal-dialog" role="document" style="max-width: 800px; width: 100%; height: 440px;">
+              <div class="modal-content" style="height: 100%; overflow-y: auto;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalDetailLabel{{ order.supplier.supplier_code }}" class="personal-info" style="color:#CBA230">{{ order.supplier.supplier_code }} | {{ order.supplier.supplier_name }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="container">
+                        <div class="row mb-2">
+                          <div class="col-md-2" style="white-space: nowrap;">
+                            <strong>Mã nhà cung cấp:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ order.supplier.supplier_code|default:'-' }}</span>
+                          </div>
+                          <div class="col-md-2">
+                            <strong>Số điện thoại:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ order.supplier.phone_number|default:'-' }}</span>
+                          </div>
+                        </div>
+                        <div class="row mb-2">
+                          <div class="col-md-2" style="white-space: nowrap;">
+                            <strong>Tên nhà cung cấp:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ order.supplier.supplier_name|default:'-' }}</span>
+                          </div>
+                          <div class="col-md-2">
+                            <strong>Facebook:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ order.supplier.facebook|default:'-' }}</span>
+                          </div>
+                        </div>
+                        <div class="row mb-2">
+                          <div class="col-md-2">
+                            <strong>Phân loại:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ order.supplier.category|default:'-' }}</span>
+                          </div>
+                          <div class="col-md-2">
+                            <strong>Website:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ order.supplier.website|default:'-' }}</span>
+                          </div>
+                        </div>
+                        <div class="row mb-2">
+                          <div class="col-md-2">
+                            <strong>Địa chỉ:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ order.supplier.address|default:'-' }}</span>
+                          </div>
+                          <div class="col-md-2">
+                            <strong>Ghi chú:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ order.supplier.notes|default:'-' }}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <hr color="#dee2e6">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+          <!-- Modal update -->
+          <div class="modal fade" id="modalUpdate{{ order.order_code }}" tabindex="-1" aria-labelledby="modalUpdateLabel{{ order.order_code }}" aria-hidden="true">
+            <div class="modal-dialog" role="document" style="max-width: 800px; width: 100%; height: 560px;">
+              <div class="modal-content" style="height: 100%; overflow-y: auto;">
+                  <form id="uploadFileForm" method="post" action="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="updateOrderModalLabel" class="personal-info" style="color:#CBA230">Điều chỉnh phiếu đặt hàng</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="height: calc(100% - 125spx); overflow-y: auto;">
+                      <div class="row mb-2">
+                          <div class="col-md-2 d-flex align-items-center" style="white-space: nowrap;">
+                              <label for="order_code">Mã phiếu đặt:</label>
+                          </div>
+                          <div class="col-md-4 d-flex align-items-center">
+                              <input type="text" id="update_order_code" name="update_order_code" class="form-control custom-input" value="{{ order.order_code }}" readonly>
+                            </div>
+                          <div class="col-md-2 d-flex align-items-center" style="white-space: nowrap;">
+                              <label for="order_date">Ngày đặt:</label>
+                          </div>
+                          <div class="col-md-4 d-flex align-items-center">
+                              <input type="date" id="update_order_date" name="update_order_date" class="form-control custom-input" value="{{  order.order_date|date:'Y-m-d' }}">
+                          </div>
+                      </div>
+                      <div class="row mb-2">
+                        <div class="col-md-2 d-flex align-items-center">
+                            <label for="supplier">Nhà cung cấp:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <select id="supplier-select" name="supplier" class="form-control custom-input">
+                                {% if order.supplier %}
+                                    <option value="{{ order.supplier }}" selected>{{ order.supplier }}</option>
+                                {% else %}
+                                    <option value="" selected>Chọn Nhà cung cấp</option>
+                                {% endif %}
+                                {% for sup in supplier %}
+                                    <option value="{{ sup.supplier_code }} - {{ sup.supplier_name }}">
+                                        {{ sup.supplier_code }} - {{ sup.supplier_name }}
+                                    </option>
+                                {% endfor %}
+                                <option value="add-new-supplier" data-bs-toggle="modal" data-bs-target="#createSupplierModal">
+                                    + Thêm nhà cung cấp
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center" style="white-space: nowrap;">
+                            <label for="expected_date">Ngày dự kiến nhận:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <input type="date" id="update_expected_date" name="update_expected_date" class="form-control custom-input" value="{{ order.expected_date|date:'Y-m-d' }}">
+                        </div>  
+                      </div>
+                      <div class="row mb-2">
+                          <div class="col-md-2 d-flex align-items-center">
+                              <label for="total_quantity">Số lượng đặt:</label>
+                          </div>
+                          <div class="col-md-4 d-flex align-items-center">
+                              <input type="text" id="update_total_quantity" name="update_total_quantity" class="form-control custom-input" value="{{ order.total_quantity|default:'' }}" readonly>
+                          </div>
+                          <div class="col-md-2 d-flex align-items-center">
+                              <label for="payment_method">Phương thức:</label>
+                          </div>
+                          <div class="col-md-4 d-flex align-items-center">
+                            <select id="update_payment_method" name="update_payment_method" class="form-control">
+                              <option value="{{ order.payment_method }}" selected>{{ order.payment_method }}</option>
+                              <option value="">-- Chọn Phương thức thanh toán --</option>
+                              <option value="Tiền mặt">Tiền mặt</option>  
+                              <option value="Chuyển khoản">Chuyển khoản</option>
+                              <option value="Thẻ">Thẻ</option>
+                          </select>
+                          </div>
+                      </div>
+                      <div class="row mb-2">
+                        <div class="col-md-2 d-flex align-items-center">
+                            <label for="total_amount">Tổng tiền:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <input type="text" id="update_total_amount" name="update_total_amount" class="form-control custom-input" value="{{ order.total_amount|default:'' }}" readonly>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center">
+                            <label for="prepaid">Trả trước:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <input type="text" id="update_prepaid" name="update_prepaid" class="form-control custom-input" value="{{ order.prepaid|default:'' }}">
+                        </div>
+                    </div>
+                      <div class="row mb-2">
+                        <div class="col-md-2 d-flex align-items-center">
+                              <label for="note">Ghi chú:</label>
+                          </div>
+                          <div class="col-md-10 d-flex align-items-center">
+                              <input type="text" id="update_note" name="update_note" class="form-control custom-input" value="{{ order.note|default:'' }}">
+                          </div>
+                      </div>              
+                      <hr color="#dee2e6">
+                      <div id="orderlinesupdate-container">
+                        {% for order_line in order.orderline_set.all %}
+                        <div class="each-orderline">
+                            <div class="orderline row mb-2">
+                                <div class="col-md-12 d-flex align-items-center">
+                                  <span style="color:#CBA230">Nguyên vật liệu&nbsp;</span>
+                                    <label class="order_line_code" style="color:#CBA230">{{ order_line.order_line_code }}</label>
+                                </div>
+                            </div>
+                    
+                            <div class="orderline row mb-2">
+                                <div class="col-md-2 d-flex align-items-center">
+                                    <label for="material">Nguyên vật liệu:</label>
+                                </div>
+                                <div class="col-md-10 d-flex align-items-center">
+                                    <select id="material-select" name="material" class="form-control material-select">
+                                        <option value="">-- Chọn Nguyên vật liệu --</option>
+                                        {% for mat in material %}
+                                            <option value="{{ mat.material_code }} - {{ mat.material_name }}" 
+                                                    <!-- data-price="{{ mat.price }}" 
+                                                    data-unit-of-measure="{{ mat.unit_of_measure }}"
+                                                    {% if mat.material_code == order_line.material.material_code %} 
+                                                        selected
+                                                    {% endif %}> -->
+                                                {{ mat.material_code }} - {{ mat.material_name }}
+                                            </option>
+                                        {% endfor %}
+                                        <option value="add-new-material">+ Thêm nguyên vật liệu</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="orderline row mb-2">
+                                <div class="col-md-2 d-flex align-items-center">
+                                    <label for="quantity">Số lượng:</label>
+                                </div>
+                                <div class="col-md-4 d-flex align-items-center">
+                                    <input type="text" name="quantity" class="form-control quantity" value="{{ order_line.quantity }}">
+                                </div>
+                                <div class="col-md-2 d-flex align-items-center">
+                                    <label for="unit_of_measure">Đơn vị tính:</label>
+                                </div>
+                                <div class="col-md-4 d-flex align-items-center">
+                                    <input type="text" name="unit_of_measure" class="form-control unit_of_measure" value="{{ order_line.unit_of_measure }}">
+                                </div>
+                            </div>
+                            <div class="orderline row mb-2">
+                                <div class="col-md-2 d-flex align-items-center">
+                                    <label for="price">Đơn giá:</label>
+                                </div>
+                                <div class="col-md-4 d-flex align-items-center">
+                                    <input type="text" name="price" class="form-control price" value="{{ order_line.price }}">
+                                </div>
+                                <div class="col-md-2 d-flex align-items-center">
+                                    <label for="total">Thành tiền:</label>
+                                </div>
+                                <div class="col-md-4 d-flex align-items-center">
+                                    <input type="text" name="total" class="form-control total" value="{{ order_line.total }}" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                      </div>                  
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn cancel-btn" data-bs-dismiss="modal" style="width: 150px;">Hủy</button>
+                      <button type="submit" class="btn submit-btn" id="submitUpdateOrderBtn" data-order-code="{{ order.order_code }}" style="width: 150px;">Chỉnh sửa & Đóng</button>
+                    </div>
+                  </form>
+                </div>
+            </div>
+          </div>
+
+          <!-- Modal delete -->
+          <div class="modal fade" id="modalDelete{{ order.order_code }}" tabindex="-1" aria-labelledby="modalDeleteLabel{{ order.order_code }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                  <form id="uploadFileForm" method="post" action="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="deleteOrderModalLabel" style="color:#CBA230">Xóa phiếu đặt hàng</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Bạn chắc chắn muốn xóa phiếu đặt hàng <strong>{{ order.order_code }}</strong>?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn submit-btn" id="submitDeleteOrderBtn" data-order-code="{{ order.order_code }}">Xóa & Đóng</button>
+                    </div>
+                  </form>
+                </div>
+            </div>
+          </div>
+
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p>Không có bất kỳ nguyên vật liệu nào.</p>
+  {% endif %}
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        {% if order_page.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ order_page.previous_page_number }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}&search={{ search_query }}" aria-label="Previous">
+                    <span aria-hidden="true">&lsaquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&lsaquo;</span>
+                </a>
+            </li>
+        {% endif %}
+
+        {% for num in order_page.paginator.page_range %}
+            {% if order_page.number == num %}
+                <li class="page-item active">
+                    <a class="page-link" href="?page={{ num }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}&search={{ search_query }}">{{ num }}</a>
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}&search={{ search_query }}">{{ num }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if order_page.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ order_page.next_page_number }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}&search={{ search_query }}" aria-label="Next">
+                    <span aria-hidden="true">&rsaquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&rsaquo;</span>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+  $(document).ready(function() {
+    
+    document.getElementById('search-input').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') { 
+            const searchValue = this.value;
+            const url = new URL(window.location.href);
+            url.searchParams.set('search', searchValue);
+            url.searchParams.set('page', 1); 
+            window.location.href = url.toString();
+        }
+    });
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+
+    $(document).ready(function () {
+        let selectedSupplierCode = '';
+
+        
+        $('.modal').on('show.bs.modal', function () {
+            let modal = $(this);
+            let supplierSelect = modal.find('#supplier-select');
+
+            let supplierValue = supplierSelect.val();
+            
+            if (supplierValue) {
+                selectedSupplierCode = supplierValue.split(" - ")[0];
+            } else {
+                selectedSupplierCode = ''; // hoặc giá trị mặc định
+            }
+
+            console.log("Nhà cung cấp ban đầu:", selectedSupplierCode);
+
+            if (selectedSupplierCode) {
+                loadMaterialsForUpdateOrderlines(modal, selectedSupplierCode, true);
+            }
+        });
+
+        
+        $(document).on('change', '.modal #supplier-select', function () {
+            selectedSupplierCode = $(this).val().split(" - ")[0];
+
+            console.log("Nhà cung cấp đã chọn:", selectedSupplierCode);
+
+            let modal = $(this).closest('.modal');
+            loadMaterialsForUpdateOrderlines(modal, selectedSupplierCode, false);
+        });
+
+        
+        function loadMaterialsForUpdateOrderlines(modal, supplierCode, isFirstLoad) {
+            if (!supplierCode) {
+                console.warn("Supplier Code không hợp lệ!");
+                return;
+            }
+
+            $.ajax({
+                url: '{% url "catalog:get_materials_by_supplier" %}',
+                data: { 'supplier_code': supplierCode },
+                dataType: 'json',
+                success: function (data) {
+                    console.log("Dữ liệu nguyên vật liệu nhận về:", data);
+
+                    modal.find('.each-orderline').each(function () {
+                        let materialSelect = $(this).find('.material-select');
+                        let selectedMaterial = materialSelect.val(); 
+
+                        materialSelect.empty();
+
+                        if (isFirstLoad && selectedMaterial) {
+                            materialSelect.append('<option value="' + selectedMaterial + '" selected>' + selectedMaterial + '</option>');
+                        } else {
+                            materialSelect.append('<option value="">-- Chọn nguyên vật liệu --</option>');
+                        }
+
+
+                        data.forEach(function (item) {
+                            if (selectedMaterial !== item.material_code) {
+                                materialSelect.append('<option value="' + item.material_code + '">' + item.material_code + ' - ' + item.material_name + '</option>');
+                            }
+                        });
+
+                        if (selectedMaterial && data.some(item => item.material_code === selectedMaterial)) {
+                            materialSelect.val(selectedMaterial);
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Lỗi AJAX:", status, error);
+                    console.error("Phản hồi từ server:", xhr.responseText);
+                }
+            });
+        }
+    });
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+    $('#submitUploadFileBtn').click(function(e) {
+      e.preventDefault();
+
+      var url = '{% url "catalog:upload_order" %}';
+      var csrftoken = '{{ csrf_token }}';
+      var fileInput = document.getElementById('file').files[0];
+      var sheetUrl = document.getElementById('sheetUrl').value;
+      var formData = new FormData();
+
+      if (fileInput) {
+        formData.append('file', fileInput);
+      } else if (sheetUrl) {
+        formData.append('sheetUrl', sheetUrl);
+      } else {
+        alert("Vui lòng chọn file hoặc nhập URL của Google Sheets.");
+        return;
+      }
+
+      fetch(url, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': csrftoken,
+        },
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        alert("Tệp đã được tải lên và xử lý thành công");
+        $('#uploadFileModal').modal('hide');
+        window.location.reload(); 
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert("Đã xảy ra lỗi khi xử lý tệp.");
+      });
+    });
+
+    
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+    $('#submitCreateOrderBtn').click(function(e) { 
+        e.preventDefault();
+
+        var url = '{% url "catalog:create_order" %}';
+        var csrftoken = '{{ csrf_token }}';
+
+        var orderData = {
+            order_code: $('#order_code').val(),
+            order_date: $('#order_date').val(),
+            supplier: $('#supplier-select').val(),
+            expected_date: $('#expected_date').val(),
+            payment_method: $('#payment_method').val(),
+            total_quantity: $('#total_quantity').val(),
+            total_amount: $('#total_amount').val(),
+            prepaid: $('#prepaid').val(),
+            note: $('#note').val(),
+            order_lines: []
+        };
+
+        $("#orderlines-container .each-orderline").each(function() {
+            var orderLine = {
+                order_line_code: $(this).find(".order_line_code").text(), 
+                material: $(this).find(".material-select").val(),
+                quantity: $(this).find(".quantity").val(),
+                price: $(this).find(".price").val(),
+                unit_of_measure: $(this).find(".unit_of_measure").val(),
+                total: $(this).find(".total").val()
+            };
+            console.log(orderLine);
+            orderData.order_lines.push(orderLine);
+        });
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify(orderData)
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log(orderData);
+          alert("Phiếu đặt nguyên vật liệu mới đã thêm thành công");
+          $('#createOrderModal').modal('hide');
+          window.location.reload(); 
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert("Đã xảy ra lỗi khi xử lý phiếu đặt nguyên vật liệu.");
+        });
+    });
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+
+      $('#supplier').change(function() {
+      if ($(this).val() === 'add-new-supplier') {
+          $('#createSupplierModal').modal('show');
+      }
+    });
+
+    $('#submitCreateSupplierBtn').click(function(e) {
+      e.preventDefault();
+
+      var url = '{% url "catalog:create_supplier" %}';
+      var csrftoken = '{{ csrf_token }}';
+
+      var supplierData = {
+          supplier_code: $('#supplier_code').val(),
+          supplier_name: $('#supplier_name').val(),
+          tax_code: $('#tax_code').val(),
+          contact_person: $('#contact_person').val(),
+          phone_number: $('#phone_number').val(),
+          email: $('#email').val(),
+          address: $('#address').val(),
+          notes: $('#notes').val(),
+      };
+
+      fetch(url, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrftoken,
+          },
+          body: JSON.stringify(supplierData)
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
+      .then(data => {
+          alert("Nhà cung cấp đã được tạo thành công!");
+          $('#createSupplierModal').modal('hide');
+
+          $('#supplier').append($('<option>', {
+              value: supplierData.supplier_code,
+              text: supplierData.supplier_code + ' - ' + supplierData.supplier_name,
+              selected: true
+          }));
+    })
+      .catch(error => {
+          console.error('Error:', error);
+          alert("Đã xảy ra lỗi khi thêm nhà cung cấp.");
+      });
+    });
+    
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+    $('#material').change(function() {
+        if ($(this).val() === 'add-new-material') {
+            $('#createMaterialModal').modal('show');
+        }
+    });
+
+    $('#submitCreateMaterialBtn').click(function(e) {
+      e.preventDefault();
+
+      var url = '{% url "catalog:create_material" %}';
+      var csrftoken = '{{ csrf_token }}';
+
+      var materialData = {
+          material_code: $('#material_code').val(),
+          material_name: $('#material_name').val(),
+          supplier: $('#supplier').val(),
+          category: $('#category').val(),
+          price: $('#price').val(),
+          unit_of_measure: $('#unit_of_measure').val(),
+          inventory: $('#inventory').val(),
+          description: $('#description').val(),
+          notes: $('#notes').val(),
+      };
+
+      fetch(url, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrftoken,
+          },
+          body: JSON.stringify(materialData)
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
+      .then(data => {
+          alert("Nguyên vật liệu đã được tạo thành công!");
+          location.reload(); 
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          alert("Đã xảy ra lỗi khi thêm nguyên vật liệu.");
+      });
+    });
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+    $(document).ready(function () {
+    
+      $(document).on('input', '.quantity, .price', function () {
+          updateTotalPrice(this);
+      });
+
+      function updateTotalPrice(inputElement) {
+          let orderlineRow = $(inputElement).closest('.each-orderline');
+          let quantity = parseFloat(orderlineRow.find('.quantity').val()) || 0;
+          let price = parseFloat(orderlineRow.find('.price').val()) || 0;
+          let total = 0;
+
+          console.log("Quantity:", quantity, "Price:", price);
+
+          total = quantity * price;
+          orderlineRow.find('.total').val(total.toFixed(2));
+          console.log("Total:", total);
+          updateTotalAmount();
+      }
+
+      function updateTotalAmount() {
+          let totalAmount = 0;
+          let updateTotalAmount = 0;
+          let totalQuantity = 0;
+          let updateQuantity = 0;
+
+          $('#orderlines-container .total').each(function () {
+              let value = parseFloat($(this).val()) || 0;
+              totalAmount += value;
+          });
+          $('#orderlines-container .quantity').each(function () {
+              let value = parseFloat($(this).val()) || 0;
+              totalQuantity += value;
+          });
+          $('#total_quantity').val(totalQuantity);
+          $('#total_amount').val(totalAmount.toFixed(2));
+      }
+    });
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+    $(document).ready(function () {
+        $(document).on('input', '.quantity, .price', function () {
+            updateTotalPriceEdit(this);
+        });
+        function updateTotalPriceEdit(inputElement) {
+            let formContainer = $(inputElement).closest('.modal-body'); 
+            let orderlineRow = $(inputElement).closest('.each-orderline');
+            let quantity = parseFloat(orderlineRow.find('.quantity').val()) || 0;
+            let price = parseFloat(orderlineRow.find('.price').val()) || 0;
+            let total = quantity * price;
+
+            orderlineRow.find('.total').val(total.toFixed(2));
+            updateSubtotalEdit(formContainer);
+        }
+
+        function updateSubtotalEdit(formContainer) {
+            let totalAmount = 0;
+            let totalQuantity = 0;
+            formContainer.find(' .total').each(function () {
+                let value = parseFloat($(this).val()) || 0;
+                totalAmount += value;
+            });
+
+            formContainer.find(' .quantity').each(function () {
+                let value = parseFloat($(this).val()) || 0;
+                totalQuantity += value;
+            });
+
+            console.log('totalAmount: ', totalAmount);
+            formContainer.find('#update_total_quantity').val(totalQuantity);
+            formContainer.find('#update_total_amount').val(totalAmount.toFixed(2));
+        }
+  });
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+    let selectedSupplierCode = '';
+
+    $('#supplier-select').on('change', function () {
+        selectedSupplierCode = $(this).val();
+        loadMaterialsForAllOrderlines(selectedSupplierCode);
+    });
+
+    function loadMaterialsForAllOrderlines(supplierCode) {
+        if (!supplierCode) return;
+
+        $.ajax({
+            url: '{% url "catalog:get_materials_by_supplier" %}',
+            data: { 'supplier_code': supplierCode },
+            dataType: 'json',
+            success: function (data) {
+                $('.each-orderline').each(function () {
+                    let materialSelect = $(this).find('.material-select');
+                    let selectedMaterial = materialSelect.val(); 
+
+                    materialSelect.empty();
+                    materialSelect.append('<option value="">-- Chọn nguyên vật liệu --</option>');
+                    data.forEach(function (item) {
+                        materialSelect.append('<option value="' + item.material_code + '">' + item.material_code + ' - ' + item.material_name + '</option>');
+                    });
+
+                    if (selectedMaterial) {
+                        materialSelect.val(selectedMaterial);
+                    }
+                });
+            }
+        });
+    }
+
+    function loadMaterialsForNewOrderline(orderlineElement, supplierCode) {
+        if (!supplierCode) return;
+
+        $.ajax({
+            url: '{% url "catalog:get_materials_by_supplier" %}',
+            data: { 'supplier_code': supplierCode },
+            dataType: 'json',
+            success: function (data) {
+                let materialSelect = orderlineElement.find('.material-select');
+                materialSelect.empty();
+                materialSelect.append('<option value="">-- Chọn nguyên vật liệu --</option>');
+                data.forEach(function (item) {
+                    materialSelect.append('<option value="' + item.material_code + '">' + item.material_code + ' - ' + item.material_name + '</option>');
+                });
+            }
+        });
+    }
+
+    $('#add-orderline').click(function () {
+        let orderlinesContainer = $('#orderlines-container');
+        let lastOrderLineCode = parseInt($('#orderlines-container .order_line_code').last().text()) || 0;
+        let orderlinesCount = lastOrderLineCode + 1;
+
+        let newOrderline = $(`
+            <div class="each-orderline">
+                <div class="orderline row mb-2">
+                    <div class="col-md-12 d-flex align-items-center">
+                        <span style="color:#CBA230">Nguyên vật liệu&nbsp;</span>
+                        <label class="order_line_code" style="color:#CBA230">${orderlinesCount}</label>
+                    </div>
+                </div>
+                <div class="orderline row mb-2">
+                    <div class="col-md-2 d-flex align-items-center" style="white-space: nowrap;">
+                        <label for="material">Nguyên vật liệu:</label>
+                    </div>
+                    <div class="col-md-10 d-flex align-items-center">
+                      <select class="form-control material-select">
+                            <option value="">-- Chọn Nguyên vật liệu --</option>
+                            <option value="add-new-material" data-bs-toggle="modal" data-bs-target="#createMaterialModal">+ Thêm nguyên vật liệu</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="orderline row mb-2">
+                    <div class="col-md-2 d-flex align-items-center">
+                        <label for="quantity">Số lượng:</label>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-center">
+                        <input type="text" name="quantity" class="form-control quantity" min="0">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-center">
+                        <label for="unit_of_measure">Đơn vị tính:</label>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-center">
+                      <select name="unit_of_measure" class="form-control unit_of_measure">
+                        <option value="">-- Chọn Đơn vị tính --</option>
+                        <option value="M">M</option>  
+                        <option value="Cái">Cái</option>
+                        <option value="Cuộn">Cuộn</option>
+                      </select>
+                    </div>
+                </div>
+                <div class="orderline row mb-2">
+                    <div class="col-md-2 d-flex align-items-center">
+                        <label for="price">Đơn giá:</label>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-center">
+                        <input type="text" name="price" class="form-control price">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-center">
+                        <label for="total">Thành tiền:</label>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-center">
+                        <input type="text" name="total" class="form-control total" readonly>
+                    </div>
+                </div>
+            </div>
+        `);
+
+        orderlinesContainer.append(newOrderline);
+
+        if (selectedSupplierCode) {
+            loadMaterialsForNewOrderline(newOrderline, selectedSupplierCode);
+        }
+
+        updateTotalAmount();
+    });
+
+});
+
+    
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+    $(document).on('click', '#submitUpdateOrderBtn', function(e) {
+        e.preventDefault();    
+        var modal = $(this).closest('.modal');        
+        var order_code = $(this).data('order-code');
+        console.log("Order Code:", order_code);
+        var url = '{% url "catalog:update_order" order_code="ORDER_CODE" %}';
+        url = url.replace("ORDER_CODE", order_code);
+        var csrftoken = '{{ csrf_token }}';
+
+        var updateData = {
+            order_code: modal.find('#update_order_code').val(),
+            order_date: modal.find('#update_order_date').val(),
+            supplier: modal.find('#supplier-select').val(),
+            payment_method: modal.find('#update_payment_method').val(),
+            expected_date: modal.find('#update_expected_date').val(),
+            total_quantity: modal.find('#update_total_quantity').val(),
+            total_amount: modal.find('#update_total_amount').val(),
+            prepaid: modal.find('#update_prepaid').val(),
+            note: modal.find('#update_note').val(),
+            orderlines_update: []
+        };
+
+        modal.find("#orderlinesupdate-container .each-orderline").each(function() { 
+            var orderLineUpdate = {
+                order_line_code: $(this).find(".order_line_code").text(), 
+                material: $(this).find(".material-select").val(),
+                quantity: $(this).find(".quantity").val(),
+                price: $(this).find(".price").val(),
+                unit_of_measure: $(this).find(".unit_of_measure").val(),
+                total: $(this).find(".total").val()
+            };
+            console.log(orderLineUpdate);
+            updateData.orderlines_update.push(orderLineUpdate);
+        });
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify(updateData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => { throw new Error(data.error || 'Có lỗi xảy ra'); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            alert(data.message || "Phiếu đặt nguyên vật liệu đã được chỉnh sửa thành công!");
+            location.reload(); 
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert(error.message || "Đã xảy ra lỗi khi chỉnh sửa phiếu đặt nguyên vật liệu.");
+        });
+    });
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+    $(document).on('click', '#submitDeleteOrderBtn', function(e) {
+      e.preventDefault();
+      var order_code = $(this).data('order-code');
+      console.log("Order Code:", order_code);
+      var url = '{% url "catalog:delete_order" order_code="ORDER_CODE" %}';
+      url = url.replace("ORDER_CODE", order_code);
+      var csrftoken = '{{ csrf_token }}';
+        
+      fetch(url, {
+          method: 'POST', 
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrftoken,
+          },
+          body: JSON.stringify({ order_code: order_code })
+      })
+      .then(response => {
+          if (!response.ok) {
+              return response.json().then(data => { throw new Error(data.error || 'Có lỗi xảy ra'); });
+          }
+          return response.json();
+      })
+      .then(data => {
+          alert(data.message || "Phiếu đặt nguyên vật liệu đã được xóa thành công!");
+          location.reload(); 
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          alert(error.message || "Đã xảy ra lỗi khi xóa phiếu đặt nguyên vật liệu.");
+      });
+    });
+</script>
+{% endblock %}
+

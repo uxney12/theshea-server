@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The SHEA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to right, #E8E8E8, #E8E8E8);
+            font-family: 'Nunito', sans-serif;
+        }
+        .login-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .login-container h2 {
+            color: #CBA230;
+            font-size: 24px;
+        }
+        .input-group {
+            margin: 15px 0;
+            text-align: left;
+            width: 100%;
+        }
+        .input-group label {
+            display: block;
+            font-weight: bold;
+        }
+        .input-group input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #CBA230;
+            border-radius: 6px;
+            outline: none;
+            font-family: 'Nunito', sans-serif;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 10px;
+            background: #CBA230;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            font-family: 'Nunito', sans-serif;
+        }
+        .login-btn:hover {
+            background: #b59429;
+        }
+        .links {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .links a {
+            color: #CBA230;
+            text-decoration: none;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>ĐĂNG NHẬP</h2>
+        <form method="post" style="width: 100%;">
+            {% csrf_token %}
+            {% if error %}
+                <div style="color: red;">{{ error }}</div>
+            {% endif %}
+            <div class="input-group">
+                <label for="username">Tên đăng nhập:</label>
+                <input type="text" name="username" id="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Mật khẩu:</label>
+                <input type="password" name="password" id="password" required>
+            </div>
+            <button type="submit" class="login-btn">Đăng Nhập</button>
+        </form>
+        <div class="links">
+            <p>Quên mật khẩu? <a href="#">Khôi phục</a></p>
+            <p>Chưa có tài khoản? <a href="#">Đăng ký</a></p>
+        </div>
+    </div>
+</body>
+</html>

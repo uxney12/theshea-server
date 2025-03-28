@@ -1,0 +1,95 @@
+<!-- room.html -->
+
+{% extends "base_generic.html" %}
+{% block content %}
+<main class="col-md-9 col-lg-10 px-0">
+  <br>
+  <p class="center-text">CHAT APP</p>
+  
+  <div class="mb-3">
+    <div class="form-control">     
+      <div id="chat-messages" style="max-height: 300px; overflow-y: scroll;">{% for m in messages %}<b>{{ m.username }}</b>: {{ m.content }}<br>{% endfor %}
+      </div>
+    </div>
+    <br>
+    <div class="mb-3">
+      <div class="control">
+        <input class="form-control" type="text" placeholder="Message" id="chat-message-input">
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <div class="d-grid gap-2 col-4 mx-auto">
+        <a class="btn custom-btn"" id="chat-message-submit">Submit</a>
+      </div>
+    </div>
+
+    <small>Your username: {{ username }}</small>
+    <main class="col-md-9 col-lg-10 px-0">
+</div>
+        {{ room_name|json_script:"json-roomname" }}
+        {{ username|json_script:"json-username" }}
+
+
+<script>
+  function scrollToBottom() {
+        let objDiv = document.getElementById("chat-messages");
+        objDiv.scrollTop = objDiv.scrollHeight;
+    }
+
+    scrollToBottom();
+
+    const roomName = JSON.parse(document.getElementById('json-roomname').textContent);
+    const userName = JSON.parse(document.getElementById('json-username').textContent);
+
+    const isBotChat = window.location.search.includes("bot=true");
+
+    const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + (isBotChat ? '/ws/bot/' : '/ws/chat/')
+        + roomName
+        + '/'
+    );
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+
+        if (data.message) {
+            document.querySelector('#chat-messages').innerHTML += ('<b>' + data.username + '</b>: ' + data.message + '<br>');
+        } else {
+            alert('The message was empty!')
+        }
+        scrollToBottom();
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('WebSocket closed unexpectedly:', e);
+    };
+    chatSocket.onerror = function(e) {
+        console.error('Lỗi WebSocket:', e);
+    };
+
+    document.querySelector('#chat-message-input').focus();
+    document.querySelector('#chat-message-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+
+    document.querySelector('#chat-message-submit').onclick = function(e) {
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value;
+
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'username': userName,
+            'room': roomName
+        }));
+
+        messageInputDom.value = '';
+    };
+
+</script>
+</body>
+{% endblock %}

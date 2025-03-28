@@ -1,0 +1,49 @@
+<!-- private_chat.html -->
+
+{% extends 'chat_list.html' %}
+
+{% block chat_content %}
+<div class="col-sm-8 border-end p-3">
+    <h5>Private Chat: {{ user1 }} & {{ user2 }}</h5>
+
+    <div class="chat-box border p-3 mb-3" id="chat-box" style="height: 400px; overflow-y: scroll;">
+        {% for message in messages %}
+            <div class="mb-2">
+                <strong>{{ message.username }}</strong>: {{ message.content }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <form id="chat-form" method="post">
+        {% csrf_token %}
+        <div class="input-group">
+            <input type="text" class="form-control" id="message-input" placeholder="Type a message..." required>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const roomName = "{{ user1 }}_{{ user2 }}";
+    const username = "{{ request.user.username }}";
+    const chatSocket = new WebSocket(`ws://${window.location.host}/ws/private/{{ user1 }}/{{ user2 }}/`);
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        const chatBox = document.getElementById("chat-box");
+        chatBox.innerHTML += `<div><strong>${data.sender}</strong>: ${data.message}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    };
+
+    document.getElementById("chat-form").onsubmit = function(e) {
+        e.preventDefault();
+        const messageInput = document.getElementById("message-input");
+        chatSocket.send(JSON.stringify({
+            message: messageInput.value,
+            sender: username,
+            recipient: "{{ user2 }}"
+        }));
+        messageInput.value = "";
+    };
+</script>
+{% endblock %}

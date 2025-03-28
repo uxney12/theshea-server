@@ -1,0 +1,196 @@
+{% extends "base_generic.html" %}
+{% block content %}
+<main class="col-md-9 col-lg-10 px-0">
+    <nav class="px-md-5 mb-1 mt-3" aria-label="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'catalog:list_design' %}">< Quay lại Trang Danh mục Mẫu thiết kế</a></li> 
+    </nav>
+    <p class="px-md-5 mb-1" style="font-family: nunito; font-size: 1.253125rem; font-weight: 700; color: #CBA230; ">THÔNG TIN SẢN PHẨM</p>
+    <body>
+        <div class="scrollbar px-md-5 mb-4">
+            <p class="border-line" style="border-top: 1px solid #CBA230; width: 100%;"></p>
+            <div class="container create-design">
+                <div class="row">
+                    <div class="col-md-4 text-left">
+                            {% if design.image %}
+                              <img src="{{ design.image.url }}" alt="Hình ảnh Mẫu thiết kế" class="img-fluid" style="max-width: 200px; max-height: 250px;">
+                            {% else %}
+                              <img src="/media/material_images/material.jpg" alt="Không có hình ảnh" class="img-fluid" style="max-width: 400px; max-height: 250px;">
+                            {% endif %}
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row mb-2"></div>
+                        <div class="row mb-2"></div>
+                        <div class="row mb-2">
+                            <div class="col-md-4" style="white-space: nowrap;">
+                              <strong>Mã mẫu thiết kế:</strong>
+                            </div>
+                            <div class="col-md-8">
+                              <span>{{ design.design_code|default:'-' }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-4" style="white-space: nowrap;">
+                              <strong>Tên mẫu thiết kế:</strong>
+                            </div>
+                            <div class="col-md-8">
+                              <span>{{ design.design_name|default:'-' }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-4" style="white-space: nowrap;">
+                              <strong>Nhóm hàng:</strong>
+                            </div>
+                            <div class="col-md-8">
+                              <span>[{{ design.product_type.type_name|default:'-' }}] {{ design.product_category.category_name|default:'-' }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-4" style="white-space: nowrap;">
+                              <strong>Bộ sưu tập:</strong>
+                            </div>
+                            <div class="col-md-8">
+                              <span>{{ design.collection.collection_name|default:'-' }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-4" style="white-space: nowrap;">
+                              <strong>Size:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {% if sizes %}
+                                    {% for size in sizes %}
+                                        {{ size.size.size_name }}{% if not forloop.last %} | {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <span>-</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-4" style="white-space: nowrap;">
+                                <strong>Màu:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {% if colors %}
+                                    {% for color in colors %}
+                                        {{ color.color.color_name }}{% if not forloop.last %} | {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <span>-</span>
+                                {% endif %}
+                            </div>
+                        </div>                    
+                        <div class="row mb-2">
+                            <div class="col-md-4" style="white-space: nowrap;">
+                              <strong>Tách set:</strong>
+                            </div>
+                            <div class="col-md-8">
+                              <span>{{ design.design_name|default:'-' }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-4" style="white-space: nowrap;">
+                              <strong>Mô tả:</strong>
+                            </div>
+                            <div class="col-md-8">
+                              <span>{{ design.description|default:'-' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="px-md-5 mb-1" style="font-family: nunito; font-size: 1.253125rem; font-weight: 700; color: #CBA230; ">HÌNH ẢNH VÀ MÃ SKU THEO MÀU</p>
+        <div class="scrollbar px-md-5">
+            <p class="border-line" style="border-top: 1px solid #CBA230; width: 100%;"></p>
+            <div class="container create-design">
+                {% for color, sku_list in color_sku_map.items %}
+                <div class="row">
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-md-4">
+                            {% if sku_list %}
+                                {% with first_sku=sku_list.0 %}
+                                    <input type="hidden" id="skuIds_{{ forloop.counter }}" value="{% for sku in sku_list %}{{ sku.id }},{% endfor %}">
+                                    {% if first_sku.image %}
+                                        <img src="{{ first_sku.image.url }}" alt="Hình ảnh SKU" class="img-fluid" style="max-width: 200px; max-height: 250px;">
+                                    {% else %}
+                                        <label for="image_{{ forloop.counter }}" class="form-control custom-input d-flex align-items-center justify-content-center" style="cursor: pointer; height: 250px; width: 200px;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" style="width: 20px; height: 20px; margin-right: 8px; color: #6e7891;">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                                            </svg>
+                                            <span style="font-size: 12px; color: #6e7891;">Tải tệp lên...</span>
+                                        </label>
+                                        <input type="file" id="image_{{ forloop.counter }}" name="image_{{ forloop.counter }}" class="d-none" accept="image/*">
+                                    {% endif %}
+                                {% endwith %}
+                            {% endif %}
+                            <button type="submit" class="btn submit-btn mt-3 submitAddImageBtn" data-color="{{ forloop.counter }}" style="align-self: center; width:200px;">
+                                Thay đổi hình ảnh
+                            </button>
+                        </div>                     
+                        <div class="col-md-8">
+                            <h3 style="font-weight: bold; margin-bottom: 40px; font-size: 0.8rem;">Màu thứ {{ forloop.counter }} ({{ color.color_name }})</h3>
+                            {% if sku_list %}
+                                <ul style="list-style: none; padding: 0; margin: 0;">
+                                    {% for sku in sku_list %}
+                                        <li style="margin: 5px 0; font-size: 0.8rem; font-weight: 500;">
+                                            [{{ sku.sku_code }}] {{ sku.sku_name }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p style="font-size: 0.8rem; font-weight: 500;">Không có SKU cho màu này.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <hr color="#dee2e6">
+                {% endfor %}
+            </div>
+        </div>
+    </body>
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+$('.submitAddImageBtn').click(function(e) {
+    e.preventDefault();
+
+    var colorIndex = $(this).data('color');
+    var fileInput = $('#image_' + colorIndex)[0];
+    var skuIds = $('#skuIds_' + colorIndex).val();
+    var url = '{% url "catalog:detail_design" design.design_code %}';
+    var csrftoken = '{{ csrf_token }}';
+
+    if (fileInput.files.length === 0) {
+        alert("Vui lòng chọn một hình ảnh.");
+        return;
+    }
+
+    var formData = new FormData();
+    formData.append('image', fileInput.files[0]);
+    formData.append('sku_ids', skuIds);
+
+    fetch(url, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': csrftoken },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Hình ảnh đã được cập nhật cho danh sách SKU màu này!");
+            location.reload();
+        } else {
+            alert("Lỗi: " + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("Đã xảy ra lỗi khi thêm ảnh.");
+    });
+});
+
+</script>
+{% endblock %}

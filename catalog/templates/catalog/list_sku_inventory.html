@@ -1,0 +1,257 @@
+{% extends "base_generic.html" %}
+{% block content %}
+<main class="col-md-9 col-lg-10 px-0">
+    <div class="d-flex flex-column align-items-start pt-4 pb-3 mb-3" style="background-color: #f5f7fa; border-bottom: solid 1px #e3e6ed;">
+
+      <p class="px-md-5 mb-3" style="font-family: sans-serif; font-size: 1.553125rem; font-weight: 600;">QUẢN LÝ TỒN KHO SKU</p>
+      <div class="container-fluid px-md-5">
+        <div class="row align-items-center">
+            <div class="col-auto">
+              <div class="d-flex align-items-center border rounded px-3" style="width: 250px; background: #FFFFFF; border-radius: 5px; border-color: #cbd0dd;">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16" class="text-muted">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                  </svg>
+                  <input type="text" id="search-input" class="form-control border-0 shadow-none bg-transparent ms-2" 
+                  placeholder="Tìm kiếm..." style="width: 250px; font-size: .8rem; font-family: 'Nunito'; border-radius: 5px; padding: 6px 12px; " 
+                  value="{{ search_query }}" />
+              </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  
+
+
+
+  <!-- Bảng loại nguyên vật liệu -->
+  {% if inventory_page %}
+  <div class="table-responsive scrollbar px-md-5">
+    <table class="table" style="width: 100%; table-layout: fixed;">
+      <thead>
+        <tr>
+          <th style="width: 20%;">
+            <a href="?sort_field=sku_code&sort_order={% if current_sort_field == 'sku_code' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="{% if current_sort_field == 'sku_code' %}{{ current_sort_order }}{% endif %}">
+              MÃ SKU
+            </a>
+          </th>
+          <th style="width: 30%;">
+            <a href="?sort_field=sku_name&sort_order={% if current_sort_field == 'sku_name' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="{% if current_sort_field == 'sku_name' %}{{ current_sort_order }}{% endif %}">
+              TÊN SKU
+            </a>
+          </th>
+          <th style="width: 15%;">
+            <a href="?sort_field=quantity&sort_order={% if current_sort_field == 'quantity' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="{% if current_sort_field == 'quantity' %}{{ current_sort_order }}{% endif %}">
+              TỒN KHO
+            </a>
+          </th>
+          <th style="width: 30%;">TRẠNG THÁI</th>
+          <th style="width: 5%;">
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in inventory_page %}
+        <tr>
+          <td>
+            <a href="#" class="id-table" data-bs-toggle="modal" data-bs-target="#modalDetail{{ item.material_code }}">
+                {{ item.sku_code }}
+            </a>
+        </td>
+          <td>            
+            <a href="#" class="id-table" data-bs-toggle="modal" data-bs-target="#modalDetail{{ item.material_code }}">
+                {{ item.sku_name|default:''   }}
+            </a>
+          </td>
+          <td>{{ item.quantity|default:''  }}</td>
+          <td>
+            {% if item.quantity <= 0 %}
+                <div class="progress-bar" style="background-color: #ffcdd2;">
+                    <div class="progress" style="width: 100%; background-color: #ea50451f; padding-left: 10px;">{{ item.quantity }}</div>
+                </div>
+            {% elif item.quantity <= 5 %}
+                <div class="progress-bar" style="background-color: #ffe0b2;">
+                    <div class="progress" style="width: {{ item.quantity }}%; background-color: #FF9800; padding-left: 10px;">{{ item.quantity }}</div>
+                </div>
+            {% elif item.quantity <= 10 %}
+                <div class="progress-bar" style="background-color: #FFECB3;">
+                    <div class="progress" style="width: {{ item.quantity }}%; background-color: #FFEF5D; padding-left: 10px;">{{ item.quantity }}</div>
+                </div>
+            {% elif item.quantity <= 30 %}
+                <div class="progress-bar" style="background-color: #c8e6c9;">
+                    <div class="progress" style="width: {{ item.quantity }}%; background-color: #4caf50; padding-left: 10px;">{{ item.quantity }}</div>
+                </div>
+            {% else %}
+                <div class="progress-bar" style="background-color: #bbdefb;">
+                    <div class="progress" style="width: {{ item.quantity }}%; background-color: #2196f3; padding-left: 10px;">{{ item.quantity }}</div>
+                </div>
+            {% endif %}
+
+          </td>          
+          <td>
+            <a href="#" class="icon-table" data-bs-toggle="modal" data-bs-target="#modalUpdate{{ category.category_code }}">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+              </svg>              
+            </a>
+            <a href="#" class="icon-table" data-bs-toggle="modal" data-bs-target="#modalDelete{{ category.category_code }}">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+              </svg>              
+            </a>
+          </td>
+        </tr>
+
+        <!-- Modal detail nguyên vật liệu -->
+        <div class="modal fade" id="modalDetail{{ item.material_code}}" tabindex="-1" aria-labelledby="modalDetailLabel{{ item.material_code }}" aria-hidden="true">
+            <div class="modal-dialog" role="document" style="max-width: 800px; width: 100%; height: 440px;">
+              <div class="modal-content" style="height: 100%; overflow-y: auto;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalDetailLabel{{ item.material_code }}" class="personal-info">{{ item.material_code }} | {{ material.material_name }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="container">
+                        <div class="row">
+                          <div class="col-md-4">
+                            {% if material.image %}
+                              <img src="{{ item.image.url }}" alt="Hình ảnh nguyên vật liệu" class="img-fluid" style="max-width: 300px; max-height: 150px;">
+                            {% else %}
+                              <img src="/media/material_images/material.jpg" alt="Không có hình ảnh" class="img-fluid" style="max-width: 300px; max-height: 150px;">
+                            {% endif %}
+                          </div>
+                          <div class="col-md-8">
+                            <div class="row mb-2">
+                              <div class="col-md-4" style="white-space: nowrap;">
+                                <strong>Mã nguyên vật liệu:</strong>
+                              </div>
+                              <div class="col-md-8">
+                                <span>{{ item.material_code|default:'-' }}</span>
+                              </div>
+                            </div>
+                            <div class="row mb-2">
+                              <div class="col-md-4" style="white-space: nowrap;">
+                                <strong>Tên nguyên vật liệu:</strong>
+                              </div>
+                              <div class="col-md-8">
+                                <span>{{ item.material_name|default:'-' }}</span>
+                              </div>
+                            </div>
+                            <div class="row mb-2">
+                              <div class="col-md-4">
+                                <strong>Nhà cung cấp:</strong>
+                              </div>
+                              <div class="col-md-8">
+                                <span>{{ item.supplier|default:'-' }}</span>
+                              </div>
+                            </div>
+                            <div class="row mb-2">
+                              <div class="col-md-4">
+                                <strong>Loại:</strong>
+                              </div>
+                              <div class="col-md-8">
+                                <span>{{ item.types|default:'-' }}</span>
+                              </div>
+                            </div>
+                            <div class="row mb-2">
+                              <div class="col-md-4">
+                                <strong>Màu sắc:</strong>
+                              </div>
+                              <div class="col-md-8">
+                                <span>{{ item.color|default:'-' }}</span>
+                              </div>
+                            </div>
+                            <div class="row mb-2">
+                              <div class="col-md-4">
+                                <strong>Ghi chú:</strong>
+                              </div>
+                              <div class="col-md-8">
+                                <span>{{ item.notes|default:'-' }}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <hr color="#dee2e6">
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+          </div>
+        
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p>Không có bất kỳ nhà cung cấp nào.</p>
+  {% endif %}
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        {% if inventory_page.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ inventory_page.previous_page_number }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}&search={{ search_query }}" aria-label="Previous">
+                    <span aria-hidden="true">&lsaquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&lsaquo;</span>
+                </a>
+            </li>
+        {% endif %}
+
+        {% for num in inventory_page.paginator.page_range %}
+            {% if inventory_page.number == num %}
+                <li class="page-item active">
+                    <a class="page-link" href="?page={{ num }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}&search={{ search_query }}">{{ num }}</a>
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}&search={{ search_query }}">{{ num }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if inventory_page.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ inventory_page.next_page_number }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}&search={{ search_query }}" aria-label="Next">
+                    <span aria-hidden="true">&rsaquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&rsaquo;</span>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+    document.getElementById('search-input').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') { 
+            const searchValue = this.value;
+            const url = new URL(window.location.href);
+            url.searchParams.set('search', searchValue);
+            url.searchParams.set('page', 1); 
+            window.location.href = url.toString();
+        }
+    });
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+</script>
+{% endblock %}
+

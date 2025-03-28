@@ -1,0 +1,699 @@
+{% extends "base_generic.html" %}
+{% block content %}
+<main class="col-md-9 col-lg-10 px-0">
+  <div class="d-flex flex-column align-items-start pt-4 pb-3 mb-3" style="background-color: #f5f7fa; border-bottom: solid 1px #e3e6ed;">
+    <p class="px-md-5 mb-3" style="font-family: sans-serif; font-size: 1.553125rem; font-weight: 600;">QC THÀNH PHẨM</p>
+
+    <div class="container-fluid px-md-5">
+      <div class="row align-items-center">
+          <div class="col-auto">
+            <div class="d-flex align-items-center border rounded px-3" style="width: 250px; background: #FFFFFF; border-radius: 5px; border-color: #cbd0dd;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16" class="text-muted">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                </svg>
+                <input type="text" id="search-input" class="form-control border-0 shadow-none bg-transparent ms-2" 
+                placeholder="Tìm kiếm..." style="width: 250px; font-size: .8rem; font-family: 'Nunito'; border-radius: 5px; padding: 6px 12px; " 
+                value="{{ search_query }}" />
+            </div>
+          </div>
+
+          <div class="col"></div>
+  
+          <div class="col-auto d-flex">
+              <a href="#" class="btn custom2-btn me-2" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0;">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+                  </svg>
+              </a>
+              <a href="#" data-bs-toggle="modal" data-bs-target="#uploadFileModal" class="btn custom2-btn me-2" style="display: flex; align-items: center; gap: 8px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="14" height="14" style="vertical-align: middle;">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                  </svg>        
+                  Nhập file
+              </a>
+              <a href="#" data-bs-toggle="modal" data-bs-target="#createQCModal" class="btn custom-btn" style="display: flex; align-items: center; gap: 8px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="16" height="16" style="vertical-align: middle;">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                  Thêm mới
+              </a>
+          </div>
+      </div>
+  </div>
+</div>
+
+  <!-- Modal Nhập File -->
+  <div class="modal fade" id="uploadFileModal" tabindex="-1" role="dialog" aria-labelledby="uploadFileModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form id="uploadFileForm" method="post" action="" enctype="multipart/form-data">
+          <div class="modal-header">
+            <h5 class="modal-title" id="uploadFileModalLabel">Nạp dữ liệu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group mb-2">
+              <label for="file" class="mb-2">Chọn file Excel:</label>
+              <input type="file" id="file" name="file" class="form-control" accept=".xls,.xlsx">
+            </div>
+            <div class="form-group mb-2">
+              <label for="sheetUrl" class="mb-2">URL của Google Sheets:</label>
+              <input type="text" id="sheetUrl" name="sheetUrl" class="form-control">
+            </div>
+            <div class="form-group mb-2">
+              <small class="form-text text-muted">Lưu ý: Hãy đảm bảo rằng liên kết Google Sheets đã được mở ở chế độ công khai.</small>
+            </div>
+            <div class="form-group mb-2">
+              <p>
+                Tải file mẫu danh sách nguyên vật liệu <a href="https://docs.google.com/spreadsheets/d/1a8mQSsCtSCbEevgJLosgMiwNK4DieylwszEdnGhrHFc/edit?gid=0#gid=0" target="_blank">tại đây</a>.
+              </p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Hủy</button>
+            <button type="submit" class="btn submit-btn" id="submitUploadFileBtn">Nạp & Đóng</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Tạo mới phiếu đặt hàng -->
+  <div class="modal fade" id="createQCModal" tabindex="-1" role="dialog" aria-labelledby="createQCModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 800px; width: 100%; height: 325px;">
+        <div class="modal-content" style="height: 100%; overflow-y: auto;">
+            <form id="createForm" method="post" action="" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createQCModalLabel" style="color:#CBA230">Tạo phiếu QC</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="height: calc(100% - 125spx); overflow-y: auto;">
+                    <div class="row mb-2">
+                        <div class="col-md-2 d-flex align-items-center" style="white-space: nowrap;">
+                            <label for="qc_code">Mã phiếu:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <input type="text" id="qc_code" name="qc_code" class="form-control custom-input" value="{{ new_qc_code }}" readonly>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center" style="white-space: nowrap;">
+                            <label for="qc_date">Ngày QC:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                          <input type="date" id="qc_date" name="qc_date" class="form-control custom-input" value="{{ current_time|date:'Y-m-d' }}">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-2 d-flex align-items-center">
+                          <label for="sku">Mã SKU:</label>
+                        </div>
+                        <div class="col-md-10 d-flex align-items-center">
+                            <select id="sku" name="sku" class="form-control sku">
+                                <option value="">-- Chọn Mã SKU --</option>
+                                {% for item in sku %}
+                                    <option value="{{ item.sku_code }} - {{ item.sku_name }}">{{ item.sku_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-2 d-flex align-items-center">
+                            <label for="quantity">Số lượng:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <input type="text" id="quantity" name="quantity" class="form-control custom-input" value="0">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center">
+                            <label for="status">Tình trạng:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                          <select id="status" name="status" class="form-control">
+                            <option value="">-- Chọn Tình trạng --</option>
+                            <option value="Không lỗi">Không lỗi</option>  
+                            <option value="Lỗi">Lỗi</option>
+                            <option value="Hủy">Hủy</option>
+                          </select>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-2 d-flex align-items-center">
+                          <label for="employee">Nhân viên QC:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <select id="employee" name="employee" class="form-control employee">
+                                <option value="">-- Chọn Nhân viên --</option>
+                                {% for item in employee %}
+                                    <option value="{{ item.employee_code }} - {{ item.employee_name }}">{{ item.employee_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center">
+                            <label for="note">Ghi chú:</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <input type="text" id="note" name="note" class="form-control custom-input">
+                        </div>
+                    </div>      
+                </div>
+                <div class="modal-footer">
+                    <button class="btn cancel-btn" data-bs-target="#createOrderModal" data-bs-toggle="modal" data-bs-dismiss="modal" style="width: 150px;">Hủy</button>
+                    <button class="btn submit-btn" id="submitCreateQCBtn" style="width: 150px;">Tạo mới & Đóng</button>
+                </div>
+              </form>
+          </div>
+      </div>
+  </div>
+  
+  
+  <!-- Bảng nguyên vật liệu -->
+  {% if qc_page %}
+  <div class="table-responsive scrollbar px-md-5">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>
+            <a href="?sort_field=qc_code&sort_order={% if current_sort_field == 'qc_code' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="{% if current_sort_field == 'qc_code' %}{{ current_sort_order }}{% endif %}">
+              MÃ PHIẾU QC
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=sku__sku_name&sort_order={% if current_sort_field == 'sku__sku_name' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+               class="{% if current_sort_field == 'sku__sku_name' %}{{ current_sort_order }}{% endif %}">
+              TÊN SKU
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=quantity&sort_order={% if current_sort_field == 'quantity' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+            class="{% if current_sort_field == 'quantity' %}{{ current_sort_order }}{% endif %}">
+              SỐ LƯỢNG
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=status&sort_order={% if current_sort_field == 'status' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+            class="{% if current_sort_field == 'status' %}{{ current_sort_order }}{% endif %}">
+              TRẠNG THÁI QC
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=qc_date&sort_order={% if current_sort_field == 'qc_date' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+            class="{% if current_sort_field == 'qc_date' %}{{ current_sort_order }}{% endif %}">
+              NGÀY QC
+            </a>
+          </th>
+          <th>
+            <a href="?sort_field=order_status&sort_order={% if current_sort_field == 'order_status' and current_sort_order == 'asc' %}desc{% else %}asc{% endif %}"
+            class="{% if current_sort_field == 'order_status' %}{{ current_sort_order }}{% endif %}">
+              TRẠNG THÁI ĐƠN
+            </a>
+          </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for qc in qc_page %}
+        <tr>
+          <td>
+            <a href="#" class="id-table" data-bs-toggle="modal" data-bs-target="#modalDetail{{ qc.qc_code }}">
+                {{ qc.qc_code }}
+            </a>
+          </td>
+          <td>{{ qc.sku.sku_name|default:'' }}</td>
+          <td>{{ qc.quantity|default:'' }}</td>
+          <td>
+            {% if qc.status == "Không lỗi" %}
+              <span class="btn-complete">
+                {{ qc.status }}
+              </span>
+            {% elif qc.status == "Lỗi" %}
+              <span class="btn-edit">
+                {{ qc.status }}
+              </span>
+            {% elif qc.status == "Hủy" %}
+              <span class="btn-cancel">
+                {{ qc.status }}
+              </span>
+            {% else %}
+              <span>
+                {{ qc.status }}
+              </span>
+            {% endif %}
+          </td>
+          <td>{{ qc.qc_date|date:'d/m/Y'|default:'' }}</td>
+          <td>    
+            {% if qc.order_status == 'completed' %}
+            <span class="btn-order-complete">
+                Hoàn thành
+              </span>
+            {% elif qc.order_status == 'cancelled' %}
+            <span class="btn-order-cancel">
+                Đã hủy
+              </span>
+            {% endif %}
+          </td>
+          <td>
+            {% if qc.order_status != 'cancelled' %}
+              <a href="#" class="icon-table" data-bs-toggle="modal" data-bs-target="#modalUpdate{{ qc.qc_code }}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                </svg>              
+              </a>
+              <a href="#" class="icon-table" data-bs-toggle="modal" data-bs-target="#modalDelete{{ qc.qc_code }}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                </svg>              
+              </a>
+            {% endif %}
+          </td>
+        </tr>
+
+          <!-- Modal detail -->
+          <div class="modal fade" id="modalDetail{{ qc.qc_code }}" tabindex="-1" aria-labelledby="modalDetailLabel{{ qc.qc_code }}" aria-hidden="true">
+            <div class="modal-dialog" role="document" style="max-width: 800px; width: 100%; height: 440px;">
+              <div class="modal-content" style="height: 100%; overflow-y: auto;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalDetailLabel{{ order.supplier.supplier_code }}" class="personal-info" style="color:#CBA230">{{ qc.qc_code }} | {{ qc.sku.sku_name }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="container">
+                        <div class="row mb-2">
+                          <div class="col-md-2" style="white-space: nowrap;">
+                            <strong>Mã phiếu:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ qc.qc_code|default:'-' }}</span>
+                          </div>
+                          <div class="col-md-2">
+                            <strong>Ngày QC:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ qc.qc_date|date:'d/m/Y'|default:'-' }}</span>
+                          </div>
+                        </div>
+                        <div class="row mb-2">
+                          <div class="col-md-2" style="white-space: nowrap;">
+                            <strong>Mã SKU:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ qc.sku.sku_name|default:'-' }}</span>
+                          </div>
+                          <div class="col-md-2">
+                            <strong>Số lượng:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ qc.quantity|default:'-' }}</span>
+                          </div>
+                        </div>
+                        <div class="row mb-2">
+                          <div class="col-md-2">
+                            <strong>Trạng thái:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ qc.status|default:'-' }}</span>
+                          </div>
+                          <div class="col-md-2">
+                            <strong>Nhân viên QC:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ qc.employee.employee_name|default:'-' }}</span>
+                          </div>
+                        </div>
+                        <div class="row mb-2">
+                          <div class="col-md-2">
+                            <strong>Ghi chú:</strong>
+                          </div>
+                          <div class="col-md-4">
+                            <span>{{ qc.note|default:'-' }}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <hr color="#dee2e6">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+          <!-- Modal update -->
+          <div class="modal fade" id="modalUpdate{{ qc.qc_code }}" tabindex="-1" aria-labelledby="modalUpdateLabel{{ qc.qc_code }}" aria-hidden="true">
+            <div class="modal-dialog" role="document" style="max-width: 800px; width: 100%; height: 325px;">
+              <div class="modal-content" style="height: 100%; overflow-y: auto;">
+                  <form id="uploadFileForm" method="post" action="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="modalUpdateLabel{{ qc.qc_code }}" style="color:#CBA230">Điều chỉnh phiếu QC</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="height: calc(100% - 125spx); overflow-y: auto;">
+                        <div class="row mb-2">
+                            <div class="col-md-2 d-flex align-items-center" style="white-space: nowrap;">
+                                <label for="qc_code">Mã phiếu:</label>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center">
+                                <input type="text" id="update_qc_code" name="update_qc_code" class="form-control custom-input" value="{{ qc.qc_code }}" readonly>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-center" style="white-space: nowrap;">
+                                <label for="qc_date">Ngày QC:</label>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center">
+                              <input type="date" id="update_qc_date" name="update_qc_date" class="form-control custom-input" value="{{ qc.qc_date|date:'Y-m-d' }}">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-2 d-flex align-items-center">
+                              <label for="sku">Mã SKU:</label>
+                            </div>
+                            <div class="col-md-10 d-flex align-items-center">
+                                <select id="update_sku" name="update_sku" class="form-control update_sku">
+                                    <option value="{{ qc.sku.sku_code }} - {{ qc.sku.sku_name }}">{{ qc.sku.sku_name }}</option>
+                                    {% for item in sku %}
+                                        <option value="{{ item.sku_code }} - {{ item.sku_name }}">{{ item.sku_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-2 d-flex align-items-center">
+                                <label for="quantity">Số lượng:</label>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center">
+                                <input type="text" id="update_quantity" name="update_quantity" class="form-control custom-input" value="{{ qc.quantity|default:'0' }}">
+                            </div>
+                            <div class="col-md-2 d-flex align-items-center">
+                                <label for="status">Tình trạng:</label>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center">
+                              <select id="update_status" name="update_status" class="form-control">
+                                <option value="{{ qc.status }}">{{ qc.status }}</option>
+                                <option value="Không lỗi">Không lỗi</option>  
+                                <option value="Lỗi">Lỗi</option>
+                                <option value="Hủy">Hủy</option>
+                              </select>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-2 d-flex align-items-center">
+                              <label for="employee">Nhân viên QC:</label>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center">
+                                <select id="update_employee" name="update_employee" class="form-control update_employee">
+                                    <option value="{{ qc.employee.employee_code }} - {{ qc.employee.employee_name }}">{{ qc.employee.employee_name }}</option>
+                                    {% for item in employee %}
+                                        <option value="{{ item.employee_code }} - {{ item.employee_name }}">{{ item.employee_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-center">
+                                <label for="note">Ghi chú:</label>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center">
+                                <input type="text" id="update_note" name="update_note" class="form-control custom-input" value="{{ qc.note|default:'' }}">
+                            </div>
+                        </div>      
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn cancel-btn" data-bs-dismiss="modal" style="width: 150px;">Hủy</button>
+                      <button type="submit" class="btn submit-btn" id="submitUpdateQCBtn" data-qc-code="{{ qc.qc_code }}" style="width: 150px;">Chỉnh sửa & Đóng</button>
+                    </div>
+                  </form>
+                </div>
+            </div>
+          </div>
+
+          <!-- Modal delete -->
+          <div class="modal fade" id="modalDelete{{ qc.qc_code }}" tabindex="-1" aria-labelledby="modalDeleteLabel{{ qc.qc_code }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                  <form id="uploadFileForm" method="post" action="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="deleteOrderModalLabel" style="color:#CBA230">Hủy phiếu QC</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Bạn chắc chắn muốn hủy phiếu QC <strong>{{ qc.qc_code }}</strong>?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn cancel-btn" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn submit-btn" id="submitDeleteQCBtn" data-qc-code="{{ qc.qc_code }}">Xác nhận</button>
+                    </div>
+                  </form>
+                </div>
+            </div>
+          </div>
+
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p>Không có bất kỳ nguyên vật liệu nào.</p>
+  {% endif %}
+
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        {% if qc_page.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ qc_page.previous_page_number }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}&search={{ search_query }}" aria-label="Previous">
+                    <span aria-hidden="true">&lsaquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&lsaquo;</span>
+                </a>
+            </li>
+        {% endif %}
+
+        {% for num in qc_page.paginator.page_range %}
+            {% if qc_page.number == num %}
+                <li class="page-item active">
+                    <a class="page-link" href="?page={{ num }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}&search={{ search_query }}">{{ num }}</a>
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}&search={{ search_query }}">{{ num }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if qc_page.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ qc_page.next_page_number }}&sort_field={{ current_sort_field }}&sort_order={{ current_sort_order }}&search={{ search_query }}" aria-label="Next">
+                    <span aria-hidden="true">&rsaquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&rsaquo;</span>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+  $(document).ready(function() {
+
+    document.getElementById('search-input').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') { 
+            const searchValue = this.value;
+            const url = new URL(window.location.href);
+            url.searchParams.set('search', searchValue);
+            url.searchParams.set('page', 1); 
+            window.location.href = url.toString();
+        }
+    });
+
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+    $('#submitUploadFileBtn').click(function(e) {
+      e.preventDefault();
+
+      var url = '{% url "catalog:upload_qc" %}';
+      var csrftoken = '{{ csrf_token }}';
+      var fileInput = document.getElementById('file').files[0];
+      var sheetUrl = document.getElementById('sheetUrl').value;
+      var formData = new FormData();
+
+      if (fileInput) {
+        formData.append('file', fileInput);
+      } else if (sheetUrl) {
+        formData.append('sheetUrl', sheetUrl);
+      } else {
+        alert("Vui lòng chọn file hoặc nhập URL của Google Sheets.");
+        return;
+      }
+
+      fetch(url, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': csrftoken,
+        },
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        alert("Tệp đã được tải lên và xử lý thành công");
+        $('#uploadFileModal').modal('hide');
+        window.location.reload(); 
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert("Đã xảy ra lỗi khi xử lý tệp.");
+      });
+    });
+
+    
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+    $('#submitCreateQCBtn').click(function(e) { 
+        e.preventDefault();
+
+        var url = '{% url "catalog:create_qc" %}';
+        var csrftoken = '{{ csrf_token }}';
+
+        var qcData = {
+            qc_code: $('#qc_code').val(),
+            qc_date: $('#qc_date').val(),
+            employee: $('#employee').val(),
+            sku: $('#sku').val(),
+            quantity: $('#quantity').val(),
+            status: $('#status').val(),
+            note: $('#note').val(),
+        };
+        console.log(qcData);
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify(qcData)
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log(qcData);
+          alert("Phiếu QC mới đã thêm thành công");
+          $('#createOrderModal').modal('hide');
+          window.location.reload(); 
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert("Đã xảy ra lỗi khi thêm phiếu QC.");
+        });
+    });
+
+    
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+    $(document).on('click', '#submitUpdateQCBtn', function(e) {
+        e.preventDefault();   
+        var modal = $(this).closest('.modal');   
+        var qc_code = $(this).data('qc-code');
+        console.log("QC Code:", qc_code);
+        var url = '{% url "catalog:update_qc" qc_code="QC_CODE" %}';
+        url = url.replace("QC_CODE", qc_code);
+        var csrftoken = '{{ csrf_token }}';
+
+        var updateData = {
+          qc_code: modal.find('#update_qc_code').val(),
+          qc_date: modal.find('#update_qc_date').val(),
+          employee: modal.find('#update_employee').val(),
+          sku: modal.find('#update_sku').val(),
+          quantity: modal.find('#update_quantity').val(),
+          status: modal.find('#update_status').val(),
+          note: modal.find('#update_note').val(),
+        };
+        console.log(updateData);
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify(updateData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => { throw new Error(data.error || 'Có lỗi xảy ra'); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            alert(data.message || "Phiếu QC đã được chỉnh sửa thành công!");
+            location.reload(); 
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert(error.message || "Đã xảy ra lỗi khi chỉnh sửa phiếu QC.");
+        });
+    });
+
+    ///////////////////////////
+    ///////////////////////////
+    ///////////////////////////
+
+    $(document).on('click', '#submitDeleteQCBtn', function(e) {
+      e.preventDefault();
+      var qc_code = $(this).data('qc-code');
+      console.log("QC Code:", qc_code);
+      var url = '{% url "catalog:cancel_qc" qc_code="QC_CODE" %}';
+      url = url.replace("QC_CODE", qc_code);
+      var csrftoken = '{{ csrf_token }}';
+        
+      fetch(url, {
+          method: 'POST', 
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrftoken,
+          },
+          body: JSON.stringify({ qc_code: qc_code })
+      })
+      .then(response => {
+          if (!response.ok) {
+              return response.json().then(data => { throw new Error(data.error || 'Có lỗi xảy ra'); });
+          }
+          return response.json();
+      })
+      .then(data => {
+          alert(data.message || "Phiếu QC đã được hủy thành công!");
+          location.reload(); 
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          alert(error.message || "Đã xảy ra lỗi khi hủy phiếu QC.");
+      });
+    });
+  });
+</script>
+{% endblock %}
+

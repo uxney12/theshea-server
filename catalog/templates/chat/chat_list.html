@@ -1,0 +1,181 @@
+<!-- chatlist.html -->
+{% extends "base_generic.html" %}
+{% block content %}
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse vh-100" 
+     style="border-right: solid 1px #cbd0dd; position: sticky; top: 0; background-color: #f8f9fe;">
+    <div class="text-center my-4">
+        <h3 class="fw-bold" style="color: #CBA230;">CHAT APP</h3>
+        <p class="text-muted small">Join a room and start chatting!</p>
+    </div>
+    
+    <!-- Join Room Form -->
+    <div class="card border-0 shadow-sm p-3 mb-4 mx-2" style="border-radius: 12px; background-color: #ffffff;">
+        <h5 class="fw-bold mb-3" style="color: #3a3a3a; font-size: 0.95rem;">JOIN A ROOM</h5>
+        <form method="get">
+            <div class="mb-3">
+                <label for="room-name-input" class="form-label small fw-medium">Room Name</label>
+                <input type="text" name="room-name" class="form-control form-control-sm" 
+                       id="room-name-input" style="border-radius: 8px; border-color: #e0e5f2;" required>
+            </div>
+            <div class="mb-3">
+                <label for="username-input" class="form-label small fw-medium">Username</label>
+                <input type="text" name="username" class="form-control form-control-sm" 
+                       id="username-input" style="border-radius: 8px; border-color: #e0e5f2;" required>
+            </div>
+            <button type="button" class="btn w-100" id="room-name-submit" 
+                    style="background-color: #CBA230; color: white; border-radius: 8px; padding: 8px;">
+                <i class="fas fa-sign-in-alt me-2"></i> Join Room
+            </button>
+        </form>
+    </div>
+
+    <!-- ChatBot Section -->
+    <div class="card border-0 shadow-sm p-3 mb-4 mx-2" style="border-radius: 12px; background-color: #ffffff;">
+        <h5 class="fw-bold mb-3" style="color: #3a3a3a; font-size: 0.95rem;">AI ASSISTANT</h5>
+        <div class="list-group list-group-flush">
+            <a href="{% url 'catalog:chatbot_private_chat' %}" class="list-group-item list-group-item-action border-0 py-2 px-3"
+               style="border-radius: 8px; transition: all 0.2s;">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div style="width: 36px; height: 36px; background-color: #f3ebd7; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-robot" style="color: #CBA230;"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="fw-medium" style="color: #3a3a3a;">ChatBot</div>
+                        <small class="text-muted">Chat with our AI assistant</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Public Chat Rooms -->
+    {% if rooms %}
+    <div class="card border-0 shadow-sm p-3 mb-4 mx-2" style="border-radius: 12px; background-color: #ffffff;">
+        <h5 class="fw-bold mb-3" style="color: #3a3a3a; font-size: 0.95rem;">PUBLIC ROOMS</h5>
+        <div class="input-group mb-3" style="border-radius: 8px; overflow: hidden;">
+            <span class="input-group-text border-0 bg-light" style="border-radius: 8px 0 0 8px;">
+                <i class="fas fa-search" style="color: #a0a9c0;"></i>
+            </span>
+            <input type="text" class="form-control form-control-sm border-0 bg-light" 
+                id="search-room" placeholder="Search room..." style="border-radius: 0 8px 8px 0;">
+        </div>
+        <div class="list-group list-group-flush" id="room-list" style="max-height: 200px; overflow-y: auto;">
+            {% for room in rooms %}
+                {% if not room.is_chatbot_room and room.participants_count >= 3 %}  
+                    <a href="{% url 'catalog:room' room.room %}?username={{ request.user.username }}" 
+                    class="list-group-item list-group-item-action border-0 py-2 px-3 mb-1"
+                    style="border-radius: 8px; transition: all 0.2s;">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div style="width: 36px; height: 36px; background-color: #f3ebd7; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-comments" style="color: #CBA230;"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <div class="fw-medium" style="color: #3a3a3a;">{{ room.room }}</div>
+                                <small class="text-muted">{{ room.latest_message|truncatechars:30 }}</small>
+                            </div>
+                            <div class="ms-auto">
+                                <span class="badge bg-light text-dark">{{ room.participants_count }} users</span>
+                            </div>
+                        </div>
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div> 
+    </div>
+    {% endif %}
+
+    <!-- Available Users -->
+    <div class="card border-0 shadow-sm p-3 mx-2" style="border-radius: 12px; background-color: #ffffff;">
+        <h5 class="fw-bold mb-3" style="color: #3a3a3a; font-size: 0.95rem;">ONLINE USERS ({{ users|length }})</h5>
+        
+        <div class="list-group list-group-flush" style="max-height: 200px; overflow-y: auto;">
+            {% for user in users %}
+                <a href="{% url 'catalog:private_chat' request.user.username user.username %}" 
+                class="list-group-item list-group-item-action border-0 py-2 px-3 mb-1"
+                style="border-radius: 8px; transition: all 0.2s;">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div style="width: 36px; height: 36px; background-color: #e5dce6; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-user" style="color: #9a92a3;"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <div class="fw-medium" style="color: #3a3a3a;">{{ user }}</div>
+                            <div class="d-flex align-items-center">
+                                <span class="badge rounded-pill bg-success" style="width: 8px; height: 8px; padding: 0;"></span>
+                                <small class="text-muted ms-1">Online</small>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% empty %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i> Không có người dùng trực tuyến.
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</nav>
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+    {% block chat_content %}
+    <div class="text-center my-5">
+        <div style="width: 80px; height: 80px; background-color: #f3ebd7; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+            <i class="fas fa-comments fa-2x" style="color: #CBA230;"></i>
+        </div>
+        <h4 style="color: #3a3a3a;">Welcome to the Chat App</h4>
+        <p class="text-muted">Select a chat room from the sidebar to start chatting.</p>
+    </div>
+    {% endblock %}
+</main>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+<script>
+    document.querySelector('#room-name-input').focus();
+
+    document.querySelector('#room-name-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {
+            document.querySelector('#room-name-submit').click();
+        }
+    };
+
+    document.querySelector('#room-name-submit').onclick = function(e) {
+        var roomName = document.querySelector('#room-name-input').value;
+        var userName = document.querySelector('#username-input').value;
+
+        window.location.replace(roomName + '/?username=' + userName);
+    };
+    
+    // Search functionality for room list
+    document.querySelector('#search-room').addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const roomItems = document.querySelectorAll('#room-list .list-group-item-action');
+        
+        roomItems.forEach(item => {
+            const roomName = item.querySelector('.fw-medium').textContent.toLowerCase();
+            if (roomName.includes(searchTerm)) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+    
+    // Hover effect for list items
+    const listItems = document.querySelectorAll('.list-group-item-action');
+    listItems.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = '#f8f5eb';
+        });
+        item.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = '';
+        });
+    });
+</script>
+{% endblock %}

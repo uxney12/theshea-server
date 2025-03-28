@@ -1,0 +1,413 @@
+{% extends "base_generic.html" %}
+{% block content %}
+<main class="col-md-9 col-lg-10 px-0">
+    <nav class="px-md-5 mb-1 mt-3" aria-label="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'catalog:list_design' %}">< Quay lại Trang Danh mục Mẫu thiết kế</a></li> 
+    </nav>
+    <p class="px-md-5 mb-2" style="font-family: sans-serif; font-size: 1.453125rem; font-weight: 700;">Thêm mới Mẫu thiết kế</p>
+
+  <!-- Modal Tạo mới nguyên vật liệu -->
+  <body>
+    <div class="scrollbar px-md-4">
+        <div class="container create-design">
+            <div class="row">
+                <div class="col-md-4 d-flex align-items-center">
+                    <label id="uploadLabel" for="image" class="form-control custom-input d-flex align-items-center justify-content-center" style="cursor: pointer; height: 250px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" style="width: 20px; height: 20px; margin-right: 8px; color: #6e7891;">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                        </svg>
+                        <span style="font-size: 12px; color: #6e7891;">Tải tệp lên...</span>
+                    </label>
+                    <input type="file" id="image" name="image" class="d-none" accept="image/*">
+                </div>
+        
+                <div class="col-md-4">
+                    <div class="mb-4">
+                        <label for="employee" class="form-label">Nhà thiết kế:</label>
+                        <select id="employee" name="employee" class="form-control custom-input employee">
+                            <option value=""></option>
+                            {% for emp in employee %}
+                                <option value="{{ emp.employee_code }} - {{ emp.employee_name }}">{{ emp.employee_code }} - {{ emp.employee_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="product_category" class="form-label">Chủng loại sản phẩm:</label>
+                        <select id="product_category" name="product_category" class="form-control custom-input product_category">
+                            <option value=""></option>
+                            {% for cat in product_category %}
+                                <option value="{{ cat.category_code }} - {{ cat.category_name }}">{{ cat.category_code }} - {{ cat.category_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="design_name" class="form-label">Tên thiết kế:</label>
+                        <input type="text" id="design_name" class="design_name form-control custom-input" placeholder="VD: Váy cổ V phối nút">
+                    </div>
+                </div>
+        
+                <div class="col-md-4">
+                    <div class="mb-4">
+                        <label for="product_type" class="form-label">Dòng sản phẩm:</label>
+                        <select id="product_type" name="product_type" class="product_type form-control custom-input">
+                            <option value=""></option>
+                            {% for type in product_type %}
+                                <option value="{{ type.type_code }} - {{ type.type_name }}">{{ type.type_code }} - {{ type.type_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="collection" class="form-label">Bộ sưu tập:</label>
+                        <select id="collection" name="collection" class="collection form-control custom-input">
+                            <option value=""></option>
+                            {% for col in collection %}
+                                <option value="{{ col.collection_code }} - {{ col.collection_name }}">{{ col.collection_code }} - {{ col.collection_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="is_set" class="form-label"></label>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <label class="switch">
+                                <input type="checkbox" id="is_set">
+                                <span class="slider round is_set"></span>
+                            </label>
+                            <span>Full bộ (Set)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr color="#dee2e6">
+            <div class="d-flex align-items-center mt-6">
+                <label class="me-3" style="white-space: nowrap;">Size:</label>
+                <div class="d-flex flex-wrap gap-2 size">
+                    <div class="form-check form-check-inline">
+                        <input class="btn-check" type="checkbox" id="size-3XS" name="size" value="3XS" autocomplete="off">
+                        <label class="btn btn-secondary" for="size-3XS">3XS</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="btn-check" type="checkbox" id="size-2XS" name="size" value="2XS" autocomplete="off">
+                        <label class="btn btn-secondary" for="size-2XS">2XS</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="btn-check" type="checkbox" id="size-XS" name="size" value="XS" autocomplete="off">
+                        <label class="btn btn-secondary" for="size-XS">XS</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="btn-check" type="checkbox" id="size-S" name="size" value="S" autocomplete="off">
+                        <label class="btn btn-secondary" for="size-S">S</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="btn-check" type="checkbox" id="size-M" name="size" value="M" autocomplete="off">
+                        <label class="btn btn-secondary" for="size-M">M</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="btn-check" type="checkbox" id="size-L" name="size" value="L" autocomplete="off">
+                        <label class="btn btn-secondary" for="size-L">L</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="btn-check" type="checkbox" id="size-XL" name="size" value="XL" autocomplete="off">
+                        <label class="btn btn-secondary" for="size-XL">XL</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="btn-check" type="checkbox" id="size-2XL" name="size" value="2XL" autocomplete="off">
+                        <label class="btn btn-secondary" for="size-2XL">2XL</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="btn-check" type="checkbox" id="size-3XL" name="size" value="3XL" autocomplete="off">
+                        <label class="btn btn-secondary" for="size-3XL">3XL</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="btn-check" type="checkbox" id="size-FreeSize" name="size" value="FreeSize" autocomplete="off">
+                        <label class="btn btn-secondary" for="size-FreeSize">Freesize</label>
+                    </div>
+                </div>
+            </div>
+                 
+            <hr color="#dee2e6">
+
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label for="color" class="form-label">Số lượng màu:</label>
+                    <select id="color" name="color" class="form-control custom-input color">
+                        <option value="" disabled selected></option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>              
+                <div class="col-md-4">
+                    <label for="main_fabric" class="form-label">Chất liệu vải chính:</label>
+                        <select id="main_fabric" name="main_fabric" class="main_fabric form-control custom-input">
+                            <option value=""></option>
+                            {% for mar in material %}
+                                <option value="{{ mar.material_code }} - {{ mar.material_name }}">{{ mar.material_code }} - {{ mar.material_name }}</option>
+                            {% endfor %}
+                        </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="lining_fabric" class="form-label">Chất liệu vải phối:</label>
+                        <select id="lining_fabric" name="lining_fabric" class="lining_fabric form-control custom-input">
+                            <option value=""></option>
+                            {% for mar in material %}
+                                <option value="{{ mar.material_code }} - {{ mar.material_name }}">{{ mar.material_code }} - {{ mar.material_name }}</option>
+                            {% endfor %}
+                        </select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div id="colorInputs"></div>
+            </div>
+        <div class="mt-6">
+            <label>Mô tả:</label>
+            <textarea id="description" name="description" class="description form-control custom-input" rows="4" style="height: 100px;" placeholder="Mô tả về mẫu sản phẩm vào đây..."></textarea>
+        </div>
+        
+        <div id="setInfo" style="display: none; margin-top: 10px;">
+            <hr color="#dee2e6"> 
+            <p class="mb-2" style="font-family: sans-serif; font-size: 1.153125rem; font-weight: 700;">THÔNG TIN PHẦN ÁO</p>
+            <div class="row">
+                <div class="col-md-4 d-flex align-items-start">
+                    <label id="uploadLabel" for="image" class="form-control custom-input d-flex align-items-center justify-content-center" style="cursor: pointer; height: 250px; width: 100%;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" style="width: 20px; height: 20px; margin-right: 8px; color: #6e7891;">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                        </svg>
+                        <span style="font-size: 12px; color: #6e7891;">Tải tệp lên...</span>
+                    </label>
+                    <input type="file" id="image" name="image" class="d-none" accept="image/*">
+                </div>
+
+                <div class="col-md-8">
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="mb-4">
+                                <label for="description" class="form-label">Tên sản phẩm (Nếu bán tách SET):</label>
+                                <textarea id="description" name="description" class="form-control custom-input"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="mb-4">
+                                <label for="description" class="form-label">Mô tả:</label>
+                                <textarea id="description" name="description" class="form-control custom-input" rows="5" style="height: 155px;" placeholder="Mô tả về mẫu sản phẩm vào đây..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr color="#dee2e6"> 
+            <p class="mb-2" style="font-family: sans-serif; font-size: 1.153125rem; font-weight: 700;">THÔNG TIN PHẦN QUẦN/VÁY</p>
+            <div class="row">
+                <div class="col-md-4 d-flex align-items-start">
+                    <label id="uploadLabel" for="image" class="form-control custom-input d-flex align-items-center justify-content-center" style="cursor: pointer; height: 250px; width: 100%;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" style="width: 20px; height: 20px; margin-right: 8px; color: #6e7891;">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                        </svg>
+                        <span style="font-size: 12px; color: #6e7891;">Tải tệp lên...</span>
+                    </label>
+                    <input type="file" id="image" name="image" class="d-none" accept="image/*">
+                </div>
+
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-4">
+                                <label for="description" class="form-label">Tên sản phẩm (Nếu bán tách SET):</label>
+                                <textarea id="description" name="description" class="form-control custom-input"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="mb-4">
+                                <label for="description" class="form-label">Mô tả:</label>
+                                <textarea id="description" name="description" class="form-control custom-input" rows="5" style="height: 155px;" placeholder="Mô tả về mẫu sản phẩm vào đây..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-3 d-flex justify-content-end gap-2">
+            <a href="{% url 'catalog:list_design' %}" type="button" class="btn cancel-btn" id="submitCancelDesignBtn" style="width: 150px;">Hủy</a>
+            <button type="submit" class="btn submit-btn" id="submitAddDesignBtn" style="width: 150px;">Tạo mới & Đóng</button>
+        </div>
+        
+    </div>
+</body>
+
+
+
+  
+  
+  
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+  $(document).ready(function () {
+        document.getElementById('image').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            const uploadLabel = document.getElementById('uploadLabel');
+            uploadLabel.innerHTML = `<img src="${imageUrl}" alt="Hình ảnh đã tải" style="max-height: 230px; max-width: 350px;">`;
+            }
+        });
+        $(document).ready(function () {
+        $('#image').on('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const imageUrl = URL.createObjectURL(file);
+
+                $('#uploadLabel').html(`
+                    <div class="position-relative" style="display: inline-block;">
+                        <img id="material-image" src="${imageUrl}" alt="Hình ảnh đã tải" style="max-height: 230px; max-width: 350px;">
+                        <button type="button" id="delete-image-btn" style="
+                            position: absolute;
+                            top: -5px;
+                            right: -5px;
+                            width: 13px;
+                            height: 13px;
+                            padding: 0;
+                            border: 1px solid #6e7891;
+                            border-radius: 50%;
+                            background-color: #fff;
+                            color: #6e7891;
+                            font-size: 10px;
+                            line-height: 1;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;">
+                            &times;
+                        </button>
+                    </div>
+                `);
+            }
+        });
+
+        $(document).on('click', '#delete-image-btn', function () {
+                console.log("Nút xóa đã được click.");
+
+                $('#material-image').remove();
+                $('#delete-image-btn').remove(); 
+                $('.position-relative').remove();
+                $('#image').val(''); 
+                $('#uploadLabel').html(`
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" style="width: 20px; height: 20px; margin-right: 8px; color: #6e7891;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                    </svg> 
+                    <span style="font-size: 12px; color: #6e7891;">Tải tệp lên...</span>
+                `);
+            });
+        });
+
+        $('#color').change(function () {
+            const colorCount = $(this).val();
+            const $colorInputs = $('#colorInputs');
+            $colorInputs.empty();
+
+            let row;
+            for (let i = 1; i <= colorCount; i++) {
+                if ((i - 1) % 5 === 0) {
+                    row = $('<div class="d-flex mb-2 gap-2"></div>');
+                    $colorInputs.append(row);
+                }
+
+                row.append(`
+                    <div class="flex-fill">
+                        <label for="color-${i}" class="form-label">Màu số ${i}:</label>
+                        <input type="text" id="color-${i}" name="color_input" class="form-control" required>
+                    </div>
+                `);
+            }
+        });
+        $('#is_set').change(function () {
+            if ($(this).is(':checked')) {
+                $('#setInfo').slideDown();  
+            } else {
+                $('#setInfo').slideUp();    
+            }
+        });
+
+        $('#submitAddDesignBtn').click(function(e) {
+            e.preventDefault();
+
+            var url = '{% url "catalog:create_design" %}';
+            var csrftoken = '{{ csrf_token }}';
+
+            var formData = new FormData();
+            formData.append('employee', $('#employee').val());
+            formData.append('product_category', $('#product_category').val());
+            formData.append('design_name', $('#design_name').val());
+            formData.append('product_type', $('#product_type').val());
+            formData.append('collection', $('#collection').val());
+            formData.append('is_set', $('#is_set').prop('checked'));
+            formData.append('description', $('#description').val());
+
+            var fileInput = $('#image')[0];
+            if (fileInput.files.length > 0) {
+                formData.append('image', fileInput.files[0]);
+            }
+
+            $('input[name="size"]:checked').each(function() {
+                formData.append('size', $(this).val());
+            });
+
+            $('input[name="color_input"]').each(function () {
+                formData.append('color', $(this).val());
+            });
+
+            console.log("Form Data:");
+            for (var pair of formData.entries()) {
+                console.log(pair[0] + ": " + pair[1]);
+            }
+            console.log(url)
+            console.log(csrftoken)
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Accept': 'application/json',
+                },
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert("Mẫu thiết kế đã được tạo thành công!");
+                location.reload(); 
+            })
+            .catch(async (error) => {
+            console.error('Error:', error);
+            try {
+                const errorResponse = await error.response.json();
+                console.error("Server Response:", errorResponse);
+                alert("Lỗi: " + errorResponse.detail);
+            } catch (parseError) {
+                alert("Đã xảy ra lỗi khi thêm mẫu thiết kế.");
+            }
+        });
+        });
+    });
+</script>
+{% endblock %}
+
